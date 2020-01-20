@@ -1,5 +1,8 @@
 const { LitElement, html, css } = window;
 
+const START = "start";
+const STOP = "stop";
+
 class CheckinToggle extends LitElement {
   static get properties() {
     return {
@@ -9,7 +12,7 @@ class CheckinToggle extends LitElement {
   }
   constructor() {
     super();
-    this.activeButton = "from";
+    this.activeButton = START;
   }
   static get styles() {
     return css`
@@ -47,11 +50,61 @@ class CheckinToggle extends LitElement {
     `;
   }
 
+  fireEvent(modus) {
+    // fire up change
+    const event = new CustomEvent("change", {
+      detail: {
+        modus: modus
+      }
+    });
+    this.dispatchEvent(event);
+  }
+
+  handleClick = modus => {
+    // this.fireEvent();
+    console.log(modus, "modus");
+    if (this.activeButton === modus) {
+      if (modus === START) {
+        this.activeButton = STOP;
+        this.fireEvent(START);
+      } else {
+        this.activeButton = START;
+        this.fireEvent(STOP);
+      }
+    }
+  };
   render() {
     return html`
       <div class="container">
-        <button class="toggle-button active">Ein</button>
-        <button class="toggle-button not-active">Aus</button>
+        ${this.activeButton === START
+          ? html`
+              <button
+                @click="${() => this.handleClick(START)}"
+                class="toggle-button active"
+              >
+                Ein
+              </button>
+              <button
+                @click="${() => this.handleClick(STOP)}"
+                class="toggle-button not-active"
+              >
+                Aus
+              </button>
+            `
+          : html`
+              <button
+                @click="${() => this.handleClick(START)}"
+                class="toggle-button not-active"
+              >
+                Ein
+              </button>
+              <button
+                @click="${() => this.handleClick(STOP)}"
+                class="toggle-button active"
+              >
+                Aus
+              </button>
+            `}
       </div>
     `;
   }
