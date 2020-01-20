@@ -1,5 +1,5 @@
 import "./src/js/date-stepper.js";
-
+import "./src/js/checkin-toggle";
 const { LitElement, html } = window;
 
 class TimeTracker extends LitElement {
@@ -9,7 +9,7 @@ class TimeTracker extends LitElement {
         <date-stepper mood="great"></date-stepper>
       </header>
       <article>
-        TODO
+        <checkin-toggle mood="great"></checkin-toggle>
       </article>
     `;
   }
