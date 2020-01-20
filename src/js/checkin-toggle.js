@@ -49,24 +49,31 @@ class CheckinToggle extends LitElement {
       }
     `;
   }
+
+  fireEvent(modus) {
+    // fire up change
+    const event = new CustomEvent("change", {
+      detail: {
+        modus: modus
+      }
+    });
+    this.dispatchEvent(event);
+  }
+
   handleClick = modus => {
     // this.fireEvent();
     console.log(modus, "modus");
     if (this.activeButton === modus) {
       if (modus === START) {
         this.activeButton = STOP;
+        this.fireEvent(START);
       } else {
         this.activeButton = START;
+        this.fireEvent(STOP);
       }
     }
   };
   render() {
-    let event = new CustomEvent("cat", {
-      which: {
-        hazcheeseburger: true
-      }
-    });
-
     return html`
       <div class="container">
         ${this.activeButton === START
