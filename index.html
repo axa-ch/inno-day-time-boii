@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>AXA Time Trackedr</title>
+  </head>
+  <body>
+    <script type="module">
+      // Library Bootstrap
+      import {
+        LitElement,
+        html,
+        css
+      } from "https://unpkg.com/lit-element/lit-element.js?module";
+
+      window.LitElement = LitElement;
+      window.html = html;
+      window.css = css;
+    </script>
+
+    <script type="module">
+      // App Bootstrap
+      import "./index.js";
+    </script>
+
+    <my-element mood="great"></my-element>
+  </body>
+</html>
