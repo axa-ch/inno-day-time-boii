@@ -1,25 +1,18 @@
-const { LitElement } = window;
+import "./src/js/date-stepper.js";
 
-class MyElement extends LitElement {
-  static get properties() {
-    return {
-      mood: { type: String }
-    };
-  }
+const { LitElement, html } = window;
 
-  static get styles() {
-    return css`
-      .mood {
-        color: green;
-      }
-    `;
-  }
-
+class TimeTracker extends LitElement {
   render() {
     return html`
-      Web Components are <span class="mood">${this.mood}</span>!
+      <header>
+        <date-stepper mood="great"></date-stepper>
+      </header>
+      <article>
+        TODO
+      </article>
     `;
   }
 }
 
-customElements.define("my-element", MyElement);
+customElements.define("time-tracker", TimeTracker);
