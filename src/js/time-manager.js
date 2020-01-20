@@ -35,7 +35,7 @@ class TimeManager extends LitElement {
     return html`
       <section>
         <p>
-          Überstrunden: ${this.getOvertime()} | Soll Stunden:
+          Überstunden: ${this.getOvertime()} | Soll Stunden:
           <input
             maxlength="4"
             type="text"
