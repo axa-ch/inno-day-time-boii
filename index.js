@@ -1,5 +1,6 @@
 import "./src/js/date-stepper.js";
 import "./src/js/checkin-toggle.js";
+import "./src/js/time-manager.js";
 const { LitElement, html } = window;
 
 class TimeTracker extends LitElement {
