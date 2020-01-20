@@ -29,7 +29,7 @@ class CheckinToggle extends LitElement {
     return html`
       <div class="container">
         <button class="toggle-button active">Ein</button>
-        <button class=toggle-button">Aus</button>
+        <button class="toggle-button">Aus</button>
       </div>
     `;
   }
