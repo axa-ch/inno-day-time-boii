@@ -1,3 +1,5 @@
+import Persistence from "./persistence.js";
+
 const { LitElement, html, css } = window;
 
 class TimeManager extends LitElement {
@@ -17,6 +19,13 @@ class TimeManager extends LitElement {
   constructor() {
     super();
     this.totalHours = TimeManager.totalHours;
+    if (this.date) {
+      this.currentDate = new Date(this.date);
+    } else {
+      this.currentDate = new Date();
+    }
+
+    this.store = Persistence.getInstance();
   }
 
   getWorkedHours() {
@@ -29,6 +38,18 @@ class TimeManager extends LitElement {
 
   changeShouldHours = ev => {
     this.totalHours = +ev.target.value || TimeManager.totalHours;
+  };
+
+  handleAdd = () => {
+    const currentDate = new Date();
+    this.currentDate.setHours(currentDate.getHours());
+    this.currentDate.setMinutes(currentDate.getMinutes());
+    this.currentDate.setSeconds(currentDate.getSeconds());
+
+    this.store.add(
+      `${currentDate.getHours()}:${currentDate.getMinutes()}`,
+      Persistence.FROM
+    );
   };
 
   render() {
@@ -45,7 +66,7 @@ class TimeManager extends LitElement {
         </p>
         <div>
           <span>Eintragen</span>
-          <button>➕</button>
+          <button @click="${this.handleAdd}">➕</button>
         </div>
       </section>
     `;

@@ -1,3 +1,5 @@
+import Persistence from "./persistence.js";
+
 const { LitElement, html, css } = window;
 
 const PREV = "prev";
@@ -27,6 +29,8 @@ class DateStepper extends LitElement {
     } else {
       this.date = new Date();
     }
+    this.store = Persistence.getInstance();
+    console.log(this.store);
   }
 
   fireEvent() {
@@ -41,6 +45,13 @@ class DateStepper extends LitElement {
 
   handleClick = (mode = NEXT) => {
     this.date.setDate(this.date.getDate() + (mode === PREV ? -1 : 1));
+    // const {
+    //   store: { previous, next }
+    // } = this;
+    // const date = (mode === PREV ? previous : next)();
+    //
+    // this.date = date;
+
     this.value = this.date.toString();
     this.fireEvent();
   };
