@@ -1,6 +1,9 @@
 import Persistence from "./persistence.js";
-
-const { LitElement, html, css } = window;
+import {
+  LitElement,
+  html,
+  css
+} from "https://unpkg.com/lit-element/lit-element.js?module";
 
 class TimeManager extends LitElement {
   static get properties() {
@@ -11,7 +14,25 @@ class TimeManager extends LitElement {
   }
 
   static get styles() {
-    return css``;
+    return css`
+      :host {
+        font-family: sans-serif;
+        color: #333;
+      }
+      .overtime {
+        font-size: 14px;
+        margin-top: 2rem;
+        background-color: #f2f2f2;
+        padding: 1rem;
+        white-space: nowrap;
+      }
+
+      details,
+      summary {
+        outline: none;
+        font-size: 2rem;
+      }
+    `;
   }
 
   static totalHours = 8.4;
@@ -55,8 +76,8 @@ class TimeManager extends LitElement {
   render() {
     return html`
       <section>
-        <p>
-          Überstunden: ${this.getOvertime()} | Soll Stunden:
+        <p class="overtime">
+          Überstunden: ${this.getOvertime()} | Soll:
           <input
             maxlength="4"
             type="text"
@@ -64,10 +85,11 @@ class TimeManager extends LitElement {
             value="${this.totalHours}"
           />
         </p>
-        <div>
-          <span>Eintragen</span>
-          <button @click="${this.handleAdd}">➕</button>
-        </div>
+        <details>
+          <summary @click="${this.handleAdd}">
+            Eintragen
+          </summary>
+        </details>
       </section>
     `;
   }

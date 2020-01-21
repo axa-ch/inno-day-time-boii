@@ -1,6 +1,9 @@
 import Persistence from "./persistence.js";
-
-const { LitElement, html, css } = window;
+import {
+  LitElement,
+  html,
+  css
+} from "https://unpkg.com/lit-element/lit-element.js?module";
 
 const PREV = "prev";
 const NEXT = "next";
@@ -19,7 +22,44 @@ class DateStepper extends LitElement {
   }
 
   static get styles() {
-    return css``;
+    return css`
+      :host {
+        display: flex;
+        justify-content: space-between;
+        width: 100;
+        font-family: sans-serif;
+        color: #333;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .small {
+        font-size: 14px;
+      }
+
+      button {
+        background: #fff;
+        border: none;
+        font-size: 2rem;
+        box-shadow: 1px 2px 3px #ddd;
+        text-align: center;
+        padding: 0 1rem 0 0;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .next {
+        padding: 0 0 0 1rem;
+      }
+
+      .date-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    `;
   }
 
   constructor() {
@@ -97,16 +137,14 @@ class DateStepper extends LitElement {
 
   render() {
     return html`
-      <div>
-        <button @click="${() => this.handleClick(PREV)}">〈</button>
-        <div>
-          <p>${this.getDate()}</p>
-          <p>
-            ${this.getHelpText()}
-          </p>
-        </div>
-        <button @click="${() => this.handleClick(NEXT)}">〉</button>
+      <button @click="${() => this.handleClick(PREV)}">〈</button>
+      <div class="date-wrapper">
+        <p>${this.getDate()}</p>
+        <p class="small">
+          ${this.getHelpText()}
+        </p>
       </div>
+      <button class="next" @click="${() => this.handleClick(NEXT)}">〉</button>
     `;
   }
 }
