@@ -1,6 +1,7 @@
 import "./src/js/date-stepper.js";
 import "./src/js/checkin-toggle.js";
 import "./src/js/time-manager.js";
+import "./src/js/time-list.js";
 // Library Bootstrap
 import {
   LitElement,
@@ -49,6 +50,7 @@ class TimeTracker extends LitElement {
       </header>
       <article>
         <time-manager date=${this.date}></time-manager>
+        <time-list date=${this.date}></time-list>
         <checkin-toggle></checkin-toggle>
       </article>
     `;
