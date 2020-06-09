@@ -31,6 +31,10 @@ class DateStepper extends LitElement {
 
   static get styles() {
     return css`
+      :host {
+        display: block;
+      }
+
       .container {
         display: flex;
         height: 75px;
