@@ -80,7 +80,7 @@ class CheckinToggle extends LitElement {
           @click="${handleClick}"
           ?disabled=${activeButton === START}
         >
-          <img src="icons/stop-24px.svg" alt="einschalten" />
+          <img src="icons/stop-24px.svg" alt="ausschalten" />
         </button>
       </div>
     `;
