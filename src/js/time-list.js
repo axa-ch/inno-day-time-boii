@@ -9,7 +9,6 @@ class TimeList extends LitElement {
     static get properties() {
         return {
             date: {type: String},
-            totalHours: {type: Number}
         };
     }
 
@@ -58,7 +57,25 @@ class TimeList extends LitElement {
 
     constructor() {
         super();
+        this.store2 = Persistence.getInstance();
+        //this.store2.add('08:20',0, 'newindex')
+        console.log(this.store2.getItems())
+
+        this.items = [
+            {
+                start: '08:20',
+                end: '09:22'
+            },
+            {
+                start: '10:20',
+                end: '11:22'
+            },
+        ]
     }
+
+    handleClickDelete = ev => {
+        console.log(ev.target.parentElement)
+    };
 
     render() {
         return html`
@@ -68,11 +85,15 @@ class TimeList extends LitElement {
             Eingetragene Zeiten:
           </summary>
           <ol>
-            <li class="row">
-                <input type="time"><span>-</span><input type="time"><button><img src="../src/icons/delete_forever-24px.svg"></button>
-            </li>
+              ${ this.items.map(item => html`
+                <li class="row">
+                    <input type="time" value="${item.start}"><span>-</span><input type="time" value="${item.end}"><button @click="${this.handleClickDelete}"><img src="../src/icons/delete_forever-24px.svg"></button>
+                </li>
+              `) 
+                }
+            
           </ol>
-          <div>+</div>
+          <div class="row">+</div>
         </details>
       </section>
     `;
