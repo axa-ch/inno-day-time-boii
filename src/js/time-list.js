@@ -22,11 +22,11 @@ class TimeList extends LitElement {
       details,
       summary {
         outline: none;
-        font-size: 2rem;
+        font-size: 16px;
       }
       
       section {
-        margin-bottom: 90px;
+        margin: 20px 20px 90px;
       }
       
      .rowpause {
