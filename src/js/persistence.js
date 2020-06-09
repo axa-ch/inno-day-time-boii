@@ -1,5 +1,8 @@
+import { get, set } from "./indexed-db.js";
+
 // helpers
 const DEFAULT_DAILY = 8.4;
+const DAILY_KEY = "dailyHours";
 const ACCUMULATED_HOURS_KEY = "accumulatedHours";
 
 const formatDateAsKey = date =>
@@ -26,16 +29,11 @@ export default class Persistence {
     return inst;
   }
 
-  getItems() {
+  async getItems() {
     const { date } = this;
     const key = formatDateAsKey(date);
     this.dateKey = key;
-    const value = localStorage.getItem(key) || '{"items":[]}';
-    this.entry = {};
-    try {
-      this.entry = JSON.parse(value);
-    } catch (e) {}
-    const { items = [] } = this.entry;
+    const items = await get(key);
     return items;
   }
 
@@ -49,64 +47,68 @@ export default class Persistence {
     return this.next(-1);
   }
 
-  daily(hours) {
-    this.getItems(); // sets dateKey, entry as side-effect
-    const { entry, dateKey } = this;
+  async daily(hours) {
+    let _hours = (await get(DAILY_KEY)) || DEFAULT_DAILY;
     if (hours === undefined) {
-      return entry.daily || DEFAULT_DAILY;
+      return _hours;
     }
-    entry.daily = hours;
-    this._daily = hours;
-    const value = JSON.stringify(entry);
-    localStorage.setItem(dateKey, value);
+    await set(DAILY_KEY, hours);
     return hours;
   }
 
-  yearly(deltaHours) {
-    const _accumulatedHours =
-      localStorage.getItem(ACCUMULATED_HOURS_KEY) || "0.0";
-    const accumulatedHours = parseFloat(_accumulatedHours);
+  async yearly(deltaHours) {
+    const accumulatedHours = (await get(ACCUMULATED_HOURS_KEY)) || 0.0;
     if (deltaHours === undefined) {
       return accumulatedHours;
     }
     const newAccumulatedHours = accumulatedHours + deltaHours;
-    localStorage.setItem(ACCUMULATED_HOURS_KEY, newAccumulatedHours);
+    await set(ACCUMULATED_HOURS_KEY, newAccumulatedHours);
     return newAccumulatedHours;
   }
 
-  add(time, which, newIndex, newRangeIndex) {
+  async add(time, which, newIndex, newRangeIndex) {
     // time format: hh:mm
-    const items = this.getItems(); // sets dateKey, entry as side-effect
+    const items = await this.getItems(); // sets dateKey, entry as side-effect
+
     if (time === undefined) {
       const now = new Date();
       const _minutes = now.getMinutes();
       const _hours = now.getHours();
       time = `${_hours}:0${_minutes}`;
     }
+
     const [ok, hours, minutes] = `${time}`.match(/^(\d{1,2}):(\d{2,3})$/);
     if (!ok) {
       return false;
     }
+
     const timeDecimal = timeToDecimal(hours, minutes);
-    const { index = 0, rangeIndex = 0, dateKey, entry } = this;
+
+    const { index = 0, rangeIndex = 0, dateKey } = this;
     const nextRange = rangeIndex > 1;
     let isEdit = false;
-    if (typeof newIndex === undefined) {
-      index + (nextRange ? 1 : 0);
+
+    if (newIndex === undefined) {
+      newIndex = index + (nextRange ? 1 : 0);
     } else {
       isEdit = true;
     }
+
     items[newIndex] = items[newIndex] || [];
-    if (typeof newRangeIndex === undefined) {
+
+    if (newRangeIndex === undefined) {
       newRangeIndex = which !== undefined ? which : nextRange ? -1 : rangeIndex;
     }
+
     items[newIndex][newRangeIndex] = timeDecimal;
-    const value = JSON.stringify(entry);
-    localStorage.setItem(dateKey, value);
+
+    await set(dateKey, items);
+
     if (!isEdit) {
       this.rangeIndex = newRangeIndex + 1;
       this.index = newIndex;
     }
+
     return true;
   }
 
@@ -114,13 +116,11 @@ export default class Persistence {
     return this.add(time, which, index, which);
   }
 
-  delete(index) {
-    const items = this.getItems(); // sets dateKey, entry as side-effect
-    const { entry } = this;
+  async delete(index) {
+    const items = await this.getItems(); // sets dateKey as side-effect
+    const { dateKey } = this;
     const deleted = items.splice(index, 1);
-    entry.items = items;
-    const value = JSON.stringify(entry);
-    localStorage.setItem(dateKey, value);
+    await set(dateKey, items);
     return deleted[0];
   }
 }

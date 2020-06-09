@@ -25,21 +25,33 @@ class TimeList extends LitElement {
         font-size: 2rem;
       }
       
+      section {
+        margin-bottom: 90px;
+      }
+      
+     .rowpause {
+        display: flex;
+        justify-content: center;   
+     }
+     
+     .rowplus {
+        display: flex;
+     }
+     
      .row {
         display: flex;
-        align-items: center;   
+        align-items: center;  
      }
      
      .row > button > img {
-         width: 50px;
-         height: 50px;
-         
+         width: 30px;
+         height: 30px;
      }
      
      .row > input {
-            width: 100px;
-            height: 50px;
-        
+        width: 80px;
+        height: 30px;
+        font-size: 15px;
      }
      
      .row > span {
@@ -47,8 +59,9 @@ class TimeList extends LitElement {
      }
      
      .row > button {
-        margin-left: 50px;
-        height: 50px;
+        margin-left: auto;
+        margin-right: 50px;
+        height: 30px;
      }
     `;
     }
@@ -77,6 +90,10 @@ class TimeList extends LitElement {
         console.log(ev.target.parentElement)
     };
 
+    handleClickAdd = ev => {
+        console.log(ev.target.parentElement)
+    };
+
     render() {
         return html`
       <section>
@@ -89,11 +106,13 @@ class TimeList extends LitElement {
                 <li class="row">
                     <input type="time" value="${item.start}"><span>-</span><input type="time" value="${item.end}"><button @click="${this.handleClickDelete}"><img src="../src/icons/delete_forever-24px.svg"></button>
                 </li>
+                <li class="rowpause">
+                    1:20 Abwesenheit
+                </li>
               `) 
                 }
-            
+            <li class="row"><button @click="${this.handleClickAdd}">+</button></li>
           </ol>
-          <div class="row">+</div>
         </details>
       </section>
     `;
