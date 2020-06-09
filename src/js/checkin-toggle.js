@@ -26,17 +26,21 @@ class CheckinToggle extends LitElement {
         left: 0;
         bottom: 0;
         padding: 10px;
+        background: #ffffff;
         color: #fff;
       }
 
       button {
+        display: flex;
         flex: 1;
         height: 45px;
         margin: 10px;
-        font-size: 28px;
+        align-items: center;
+        justify-content: center;
         border: none;
         background-color: #f2f2f2;
-        color: #000;
+        font-size: 16px;
+        color: #fff;
         outline: none;
         cursor: pointer;
       }
@@ -73,6 +77,7 @@ class CheckinToggle extends LitElement {
           @click="${handleClick}"
           ?disabled=${activeButton === STOP}
         >
+          Kommen
           <img src="icons/play_arrow-24px.svg" alt="einschalten" />
         </button>
         <button
@@ -80,6 +85,7 @@ class CheckinToggle extends LitElement {
           @click="${handleClick}"
           ?disabled=${activeButton === START}
         >
+          Gehen
           <img src="icons/stop-24px.svg" alt="ausschalten" />
         </button>
       </div>
