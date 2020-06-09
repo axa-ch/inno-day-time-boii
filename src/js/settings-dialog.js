@@ -4,23 +4,32 @@ import {
   LitElement
 } from "https://unpkg.com/lit-element/lit-element.js?module";
 
+import fireEvent from "./custom-event.js";
+import Persistence from "./persistence.js";
+
 class SettingsDialog extends LitElement {
   static get properties() {
     return {
-      hoursPerDay: { type: Number }
+      hoursPerDay: { type: Number },
+      open: { type: Boolean, reflect: true }
     };
   }
 
   constructor() {
     super();
-    this.hoursPerDay = 8.4;
+    this.store = Persistence.getInstance();
+    this.open = false;
+    (async () => {
+      this.hoursPerDay = await this.store.daily();
+    })();
+    this.close = this.close.bind(this);
   }
 
   static get styles() {
     return css`
       div {
         display: flex;
-        position: fixed;
+        position: absolute;
         top: 0;
         left: 0;
         right: 0;
@@ -64,25 +73,50 @@ class SettingsDialog extends LitElement {
         text-transform: uppercase;
         color: #ffffff;
         cursor: pointer;
+        border-radius: 5px;
+      }
+
+      .close {
+        opacity: 0.5;
       }
     `;
   }
 
   render() {
-    const { hoursPerDay } = this;
+    const { hoursPerDay, open, storeHoursPerDay, close } = this;
 
-    return html`
-      <div>
-        <article>
-          <label>
-            Sollarbeitszeit:
-            <input type="text" value=${hoursPerDay} />
-          </label>
-          <button>Abbrechen</button>
-          <button>Speichern</button>
-        </article>
-      </div>
-    `;
+    return open
+      ? html`
+          <div>
+            <article>
+              <label>
+                Sollarbeitszeit (h/Tag)
+                <input type="text" class="daily" value=${hoursPerDay} />
+              </label>
+              <button class="close" @click="${close}">
+                Abbrechen
+              </button>
+              <button class="store" @click="${storeHoursPerDay}">
+                Speichern
+              </button>
+            </article>
+          </div>
+        `
+      : html``;
+  }
+
+  close() {
+    fireEvent("close", null, this);
+  }
+
+  async storeHoursPerDay() {
+    const { store, close, hoursPerDay } = this;
+    const dailyString = this.shadowRoot.querySelector(".daily").value;
+    const newDaily = parseFloat(dailyString);
+    if (isFinite(newDaily) && hoursPerDay !== newDaily) {
+      this.hoursPerDay = await store.daily(newDaily);
+      close();
+    }
   }
 }
 
