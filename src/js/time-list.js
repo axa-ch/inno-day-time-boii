@@ -8,7 +8,8 @@ import {
 class TimeList extends LitElement {
   static get properties() {
     return {
-      date: { type: String }
+      date: { type: String },
+      startStop: { type: String }
     };
   }
 
@@ -65,12 +66,15 @@ class TimeList extends LitElement {
       }
 
       .add {
-        font-weight: bold;
-        font-size: 20px;
+        font-family: -webkit-pictograph, monospace;
+        font-size: 32px;
+        line-height: 1;
+        padding-bottom: 4px;
         background: #00008f;
         color: #fff;
         width: 46px;
         border-radius: 5px;
+        border: none;
       }
 
       .rowpause {
@@ -106,6 +110,8 @@ class TimeList extends LitElement {
   }
 
   render() {
+    const { items, handleClickAdd, handleClickDelete } = this;
+
     return html`
       <section>
         <details open>
@@ -113,23 +119,23 @@ class TimeList extends LitElement {
             Eingetragene Zeiten:
           </summary>
           <ol>
-            ${this.items.map(
-              item => html`
+            ${items.map(
+              ({ start, end, pause = "1:20" }) => html`
                 <li class="row">
-                  <input type="time" value="${item.start}" /><span>-</span
-                  ><input type="time" value="${item.end}" /><button
-                    @click="${this.handleClickDelete}"
+                  <input type="time" value="${start}" /><span>-</span
+                  ><input type="time" value="${end}" /><button
+                    @click="${handleClickDelete}"
                   >
                     <img src="../src/icons/delete_forever-24px.svg" />
                   </button>
                 </li>
                 <li class="rowpause">
-                  1:20 Abwesenheit
+                  ${pause} Abwesenheit
                 </li>
               `
             )}
             <li class="row">
-              <button @click="${this.handleClickAdd}" class="add">+</button>
+              <button @click="${handleClickAdd}" class="add">+</button>
             </li>
           </ol>
         </details>

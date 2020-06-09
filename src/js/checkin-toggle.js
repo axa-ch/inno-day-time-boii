@@ -3,6 +3,7 @@ import {
   html,
   LitElement
 } from "https://unpkg.com/lit-element/lit-element.js?module";
+import fireEvent from "./custom-event.js";
 
 const START = "start";
 const STOP = "stop";
@@ -16,7 +17,6 @@ class CheckinToggle extends LitElement {
 
   constructor() {
     super();
-
     this.activeButton = START;
     this.handleClick = this.handleClick.bind(this);
   }
@@ -25,10 +25,6 @@ class CheckinToggle extends LitElement {
     return css`
       .container {
         display: flex;
-        position: fixed;
-        right: 0;
-        left: 0;
-        bottom: 0;
         padding: 10px;
         background: #ffffff;
         color: #fff;
@@ -47,6 +43,7 @@ class CheckinToggle extends LitElement {
         color: #fff;
         outline: none;
         cursor: pointer;
+        border-radius: 5px;
       }
 
       button[disabled] {
@@ -99,22 +96,12 @@ class CheckinToggle extends LitElement {
   handleClick(event) {
     const { target } = event;
 
-    const oldMode = target.classList.contains("start") ? START : STOP;
-    const newMode = oldMode === START ? STOP : START;
-
-    this.activeButton = newMode;
-    this.fireEvent(oldMode);
-  }
-
-  fireEvent(modus) {
-    // fire up change
-    const event = new CustomEvent("change", {
-      detail: {
-        modus
-      }
-    });
-
-    this.dispatchEvent(event);
+    const oldState = target.classList.contains(START) ? START : STOP;
+    // toggle state
+    const newState = oldState === START ? STOP : START;
+    this.activeButton = newState;
+    // notify parent(s)
+    fireEvent("change", oldState, this);
   }
 }
 

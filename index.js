@@ -15,7 +15,8 @@ class TimeTracker extends LitElement {
   static get properties() {
     return {
       date: { type: String, reflect: true },
-      settingsVisible: { type: Boolean }
+      settingsVisible: { type: Boolean },
+      startStop: { type: String }
     };
   }
 
@@ -64,13 +65,14 @@ class TimeTracker extends LitElement {
   }
 
   render() {
-    const { handleChange, date, settingsVisible } = this;
-
-    const settings = settingsVisible
-      ? html`
-          <settings-dialog></settings-dialog>
-        `
-      : "";
+    const {
+      handleDateChange,
+      handleStartStop,
+      toggleSettings,
+      date,
+      startStop,
+      settingsVisible
+    } = this;
 
     return html`
       <header>
@@ -79,25 +81,32 @@ class TimeTracker extends LitElement {
         <button>
           <img src="icons/exit_to_app-24px.svg" alt="exportieren" />
         </button>
-        <button @click=${this.showSettings}>
+        <button @click=${toggleSettings}>
           <img src="icons/settings-24px.svg" alt="Einstellungen" />
         </button>
       </header>
       <article>
-        <date-stepper @change=${handleChange}></date-stepper>
+        <date-stepper @change=${handleDateChange}></date-stepper>
         <time-manager date=${date}></time-manager>
-        <time-list date=${date}></time-list>
-        <checkin-toggle></checkin-toggle>
-        ${settings}
+        <time-list date=${date} .startStop="${startStop}"></time-list>
+        <checkin-toggle @change="${handleStartStop}"></checkin-toggle>
+        <settings-dialog
+          @close="${toggleSettings}"
+          .open="${settingsVisible}"
+        ></settings-dialog>
       </article>
     `;
   }
 
-  handleChange({ detail: { date } }) {
+  handleStartStop({ detail }) {
+    this.startStop = detail;
+  }
+
+  handleDateChange({ detail: { date } }) {
     this.date = date.toString();
   }
 
-  showSettings() {
+  toggleSettings() {
     this.settingsVisible = !this.settingsVisible;
   }
 }
