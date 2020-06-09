@@ -29,9 +29,13 @@ class TimeList extends LitElement {
         margin-bottom: 90px;
       }
       
+     .rowpause {
+        display: flex;
+        justify-content: center;   
+     }
+     
      .rowplus {
         display: flex;
-        align-items: right;   
      }
      
      .row {
@@ -101,6 +105,9 @@ class TimeList extends LitElement {
               ${ this.items.map(item => html`
                 <li class="row">
                     <input type="time" value="${item.start}"><span>-</span><input type="time" value="${item.end}"><button @click="${this.handleClickDelete}"><img src="../src/icons/delete_forever-24px.svg"></button>
+                </li>
+                <li class="rowpause">
+                    1:20 Abwesenheit
                 </li>
               `) 
                 }
