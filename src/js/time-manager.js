@@ -28,7 +28,8 @@ class TimeManager extends LitElement {
         width: 90%;
         padding: 1rem 42px;
         font-size: 20px;
-        margin-top: 2rem;
+        margin: 2rem 1rem 0 1rem;
+        width: 87%;
         background-color: #f2f2f2;
         white-space: nowrap;
       }
