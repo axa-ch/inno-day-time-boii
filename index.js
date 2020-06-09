@@ -38,7 +38,7 @@ class TimeTracker extends LitElement {
       }
 
       button {
-        margin-left: 1rem;
+        margin-left: 1.2rem;
         padding: 0;
         background: none;
         border: none;
