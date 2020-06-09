@@ -1,4 +1,8 @@
-import { css, html, LitElement } from "https://unpkg.com/lit-element/lit-element.js?module";
+import {
+  css,
+  html,
+  LitElement
+} from "https://unpkg.com/lit-element/lit-element.js?module";
 
 const START = "start";
 const STOP = "stop";
@@ -6,7 +10,7 @@ const STOP = "stop";
 class CheckinToggle extends LitElement {
   static get properties() {
     return {
-      activeButton: { type: String },
+      activeButton: { type: String }
     };
   }
 
@@ -92,7 +96,7 @@ class CheckinToggle extends LitElement {
     `;
   }
 
-  handleClick = (event) => {
+  handleClick(event) {
     const { target } = event;
 
     const oldMode = target.classList.contains("start") ? START : STOP;
@@ -100,14 +104,14 @@ class CheckinToggle extends LitElement {
 
     this.activeButton = newMode;
     this.fireEvent(oldMode);
-  };
+  }
 
   fireEvent(modus) {
     // fire up change
     const event = new CustomEvent("change", {
       detail: {
-        modus,
-      },
+        modus
+      }
     });
 
     this.dispatchEvent(event);

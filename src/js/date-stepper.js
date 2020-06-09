@@ -1,4 +1,8 @@
-import { css, html, LitElement } from "https://unpkg.com/lit-element/lit-element.js?module";
+import {
+  css,
+  html,
+  LitElement
+} from "https://unpkg.com/lit-element/lit-element.js?module";
 import Persistence from "./persistence.js";
 
 const PREV = "prev";
@@ -13,7 +17,7 @@ const sameDay = (d1, d2) =>
 class DateStepper extends LitElement {
   static get properties() {
     return {
-      value: { type: String, reflect: true },
+      value: { type: String, reflect: true }
     };
   }
 
@@ -77,7 +81,9 @@ class DateStepper extends LitElement {
 
   render() {
     const helpText = this.getHelpText()
-      ? html`<p class="helpText">${this.getHelpText()}</p>`
+      ? html`
+          <p class="helpText">${this.getHelpText()}</p>
+        `
       : "";
 
     return html`
@@ -101,25 +107,25 @@ class DateStepper extends LitElement {
     this.fireEvent();
   }
 
-  handleClick = (mode = NEXT) => {
+  handleClick(mode = NEXT) {
     this.date.setDate(this.date.getDate() + (mode === PREV ? -1 : 1));
     this.value = this.date.toString();
 
     this.fireEvent();
-  };
+  }
 
   fireEvent() {
     // fire up change
     const event = new CustomEvent("change", {
       detail: {
-        date: this.date,
-      },
+        date: this.date
+      }
     });
 
     this.dispatchEvent(event);
   }
 
-  getHelpText = () => {
+  getHelpText() {
     const today = new Date();
 
     const yesterday = new Date();
@@ -141,16 +147,16 @@ class DateStepper extends LitElement {
     }
 
     return;
-  };
+  }
 
-  getDate = () => {
+  getDate() {
     return this.date.toLocaleDateString(DEFAULT_LOCALE, {
       weekday: "long",
       year: "numeric",
       month: "long",
-      day: "numeric",
+      day: "numeric"
     });
-  };
+  }
 }
 
 customElements.define("date-stepper", DateStepper);

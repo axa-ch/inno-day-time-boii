@@ -79,13 +79,11 @@ class TimeList extends LitElement {
     `;
   }
 
-  static totalHours = 8.4;
-
   constructor() {
     super();
-    this.store2 = Persistence.getInstance();
+    this.store = Persistence.getInstance();
     //this.store2.add('08:20',0, 'newindex')
-    console.log(this.store2.getItems());
+    console.log(this.store.getItems());
 
     this.items = [
       {
@@ -99,13 +97,13 @@ class TimeList extends LitElement {
     ];
   }
 
-  handleClickDelete = ev => {
+  handleClickDelete(ev) {
     console.log(ev.target.parentElement);
-  };
+  }
 
-  handleClickAdd = ev => {
+  handleClickAdd(ev) {
     console.log(ev.target.parentElement);
-  };
+  }
 
   render() {
     return html`

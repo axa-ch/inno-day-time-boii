@@ -1,5 +1,10 @@
 // Library Bootstrap
-import { css, html, LitElement } from "https://unpkg.com/lit-element/lit-element.js?module";
+import {
+  css,
+  html,
+  LitElement
+} from "https://unpkg.com/lit-element/lit-element.js?module";
+
 import "./src/js/checkin-toggle.js";
 import "./src/js/date-stepper.js";
 import "./src/js/settings-dialog.js";
@@ -10,7 +15,7 @@ class TimeTracker extends LitElement {
   static get properties() {
     return {
       date: { type: String, reflect: true },
-      settingsVisible: { type: Boolean },
+      settingsVisible: { type: Boolean }
     };
   }
 
@@ -62,7 +67,9 @@ class TimeTracker extends LitElement {
     const { handleChange, date, settingsVisible } = this;
 
     const settings = settingsVisible
-      ? html`<settings-dialog></settings-dialog>`
+      ? html`
+          <settings-dialog></settings-dialog>
+        `
       : "";
 
     return html`
@@ -86,13 +93,13 @@ class TimeTracker extends LitElement {
     `;
   }
 
-  handleChange = ({ detail: { date } }) => {
+  handleChange({ detail: { date } }) {
     this.date = date.toString();
-  };
+  }
 
-  showSettings = () => {
+  showSettings() {
     this.settingsVisible = !this.settingsVisible;
-  };
+  }
 }
 
 customElements.define("time-tracker", TimeTracker);

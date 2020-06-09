@@ -1,9 +1,13 @@
-import { css, html, LitElement } from "https://unpkg.com/lit-element/lit-element.js?module";
+import {
+  css,
+  html,
+  LitElement
+} from "https://unpkg.com/lit-element/lit-element.js?module";
 
 class SettingsDialog extends LitElement {
   static get properties() {
     return {
-      hoursPerDay: { type: Number },
+      hoursPerDay: { type: Number }
     };
   }
 

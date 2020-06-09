@@ -15,8 +15,12 @@ let inst = null; // singleton instance
 
 // class
 export default class Persistence {
-  static FROM = 0;
-  static TO = 1;
+  static get FROM() {
+    return 0;
+  }
+  static get TO() {
+    return 1;
+  }
 
   constructor() {
     this.date = new Date();

@@ -42,8 +42,6 @@ class TimeManager extends LitElement {
     `;
   }
 
-  static totalHours = 8.4;
-
   constructor() {
     super();
     this.store = Persistence.getInstance();
@@ -68,9 +66,9 @@ class TimeManager extends LitElement {
     return "18:15"; //decimalTime2HoursMinutes(nowDecimal + this.getWorkedHours());
   }
 
-  changeShouldHours = ev => {
+  changeShouldHours(ev) {
     this.totalHours = +ev.target.value || TimeManager.totalHours;
-  };
+  }
 
   render() {
     return html`
