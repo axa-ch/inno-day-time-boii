@@ -61,18 +61,6 @@ class TimeManager extends LitElement {
     this.totalHours = +ev.target.value || TimeManager.totalHours;
   };
 
-  handleAdd = () => {
-    const currentDate = new Date();
-    this.currentDate.setHours(currentDate.getHours());
-    this.currentDate.setMinutes(currentDate.getMinutes());
-    this.currentDate.setSeconds(currentDate.getSeconds());
-
-    this.store.add(
-      `${currentDate.getHours()}:${currentDate.getMinutes()}`,
-      Persistence.FROM
-    );
-  };
-
   render() {
     return html`
       <section>
@@ -85,11 +73,6 @@ class TimeManager extends LitElement {
             value="${this.totalHours}"
           />
         </p>
-        <details>
-          <summary @click="${this.handleAdd}">
-            Eintragen
-          </summary>
-        </details>
       </section>
     `;
   }
