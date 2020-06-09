@@ -1,30 +1,23 @@
 import Persistence from "./persistence.js";
 import {
-  LitElement,
-  html,
-  css
+    LitElement,
+    html,
+    css
 } from "https://unpkg.com/lit-element/lit-element.js?module";
 
 class TimeList extends LitElement {
-  static get properties() {
-    return {
-      date: { type: String },
-      totalHours: { type: Number }
-    };
-  }
+    static get properties() {
+        return {
+            date: {type: String},
+            totalHours: {type: Number}
+        };
+    }
 
-  static get styles() {
-    return css`
+    static get styles() {
+        return css`
       :host {
         font-family: sans-serif;
         color: #333;
-      }
-      .overtime {
-        font-size: 14px;
-        margin-top: 2rem;
-        background-color: #f2f2f2;
-        padding: 1rem;
-        white-space: nowrap;
       }
 
       details,
@@ -32,26 +25,58 @@ class TimeList extends LitElement {
         outline: none;
         font-size: 2rem;
       }
+      
+     .row {
+        display: flex;
+        align-items: center;   
+     }
+     
+     .row > button > img {
+         width: 50px;
+         height: 50px;
+         
+     }
+     
+     .row > input {
+            width: 100px;
+            height: 50px;
+        
+     }
+     
+     .row > span {
+        margin: 20px;
+     }
+     
+     .row > button {
+        margin-left: 50px;
+        height: 50px;
+     }
     `;
-  }
+    }
 
-  static totalHours = 8.4;
+    static totalHours = 8.4;
 
-  constructor() {
-    super();
-  }
+    constructor() {
+        super();
+    }
 
-  render() {
-    return html`
+    render() {
+        return html`
       <section>
-        <details>
-          <summary @click="${this.handleAdd}">
-            Eintragen
+        <details open>
+          <summary>
+            Eingetragene Zeiten:
           </summary>
+          <ol>
+            <li class="row">
+                <input type="time"><span>-</span><input type="time"><button><img src="../src/icons/delete_forever-24px.svg"></button>
+            </li>
+          </ol>
+          <div>+</div>
         </details>
       </section>
     `;
-  }
+    }
 }
 
 customElements.define("time-list", TimeList);
