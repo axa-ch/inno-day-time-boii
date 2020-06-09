@@ -5,6 +5,9 @@ import {
   css
 } from "https://unpkg.com/lit-element/lit-element.js?module";
 
+const decimalTime2HoursMinutes = decimal =>
+  `${Math.floor(decimal)}:${((decimal - Math.floor(decimal)) / 60).toFixed(0)}`;
+
 class TimeManager extends LitElement {
   static get properties() {
     return {
@@ -19,11 +22,14 @@ class TimeManager extends LitElement {
         font-family: sans-serif;
         color: #333;
       }
-      .overtime {
-        font-size: 14px;
+      .info {
+        display: flex;
+        justify-content: space-between;
+        width: 90%;
+        padding: 1rem 42px;
+        font-size: 20px;
         margin-top: 2rem;
         background-color: #f2f2f2;
-        padding: 1rem;
         white-space: nowrap;
       }
 
@@ -39,23 +45,27 @@ class TimeManager extends LitElement {
 
   constructor() {
     super();
-    this.totalHours = TimeManager.totalHours;
-    if (this.date) {
-      this.currentDate = new Date(this.date);
-    } else {
-      this.currentDate = new Date();
-    }
-
     this.store = Persistence.getInstance();
+    const { date, store } = this;
+    this.currentDate = date ? new Date(date) : new Date();
+    (async () => {
+      this.totalHours = await store.daily();
+    })();
   }
 
   getWorkedHours() {
     return 0;
   }
 
-  getOvertime = () => {
+  getOvertime() {
     return -1 * (this.totalHours - this.getWorkedHours());
-  };
+  }
+
+  getEndtime() {
+    const { date, store } = this;
+    //const nowDecimal = store.add();
+    return "18:15"; //decimalTime2HoursMinutes(nowDecimal + this.getWorkedHours());
+  }
 
   changeShouldHours = ev => {
     this.totalHours = +ev.target.value || TimeManager.totalHours;
@@ -64,14 +74,12 @@ class TimeManager extends LitElement {
   render() {
     return html`
       <section>
-        <p class="overtime">
-          Überstunden: ${this.getOvertime()} | Soll:
-          <input
-            maxlength="4"
-            type="text"
-            @input="${this.changeShouldHours}"
-            value="${this.totalHours}"
-          />
+        <p class="info">
+          <span>Feierabend: &nbsp; ${this.getEndtime()}</span>
+          <label
+            >Stunden:&nbsp;
+            <input maxlength="4" type="time" value="${"08:24"}" readonly />
+          </label>
         </p>
       </section>
     `;

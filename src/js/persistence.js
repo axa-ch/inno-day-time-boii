@@ -67,14 +67,13 @@ export default class Persistence {
   }
 
   async add(time, which, newIndex, newRangeIndex) {
-    // time format: hh:mm
-    const items = await this.getItems(); // sets dateKey, entry as side-effect
-
+    let decimalTimeOnly = false;
     if (time === undefined) {
       const now = new Date();
       const _minutes = now.getMinutes();
       const _hours = now.getHours();
       time = `${_hours}:0${_minutes}`;
+      decimalTimeOnly = which === undefined;
     }
 
     const [ok, hours, minutes] = `${time}`.match(/^(\d{1,2}):(\d{2,3})$/);
@@ -83,6 +82,13 @@ export default class Persistence {
     }
 
     const timeDecimal = timeToDecimal(hours, minutes);
+
+    if (decimalTimeOnly) {
+      return timeDecimal;
+    }
+
+    // time format: hh:mm
+    const items = await this.getItems(); // sets dateKey, entry as side-effect
 
     const { index = 0, rangeIndex = 0, dateKey } = this;
     const nextRange = rangeIndex > 1;
