@@ -2,6 +2,7 @@
 import { css, html, LitElement } from "https://unpkg.com/lit-element/lit-element.js?module";
 import "./src/js/checkin-toggle.js";
 import "./src/js/date-stepper.js";
+import "./src/js/settings-dialog.js";
 import "./src/js/time-list.js";
 import "./src/js/time-manager.js";
 
@@ -9,7 +10,13 @@ class TimeTracker extends LitElement {
   static get properties() {
     return {
       date: { type: String, reflect: true },
+      settingsVisible: { type: Boolean },
     };
+  }
+
+  constructor() {
+    super();
+    this.settingsVisible = false;
   }
 
   static get styles() {
@@ -52,6 +59,12 @@ class TimeTracker extends LitElement {
   }
 
   render() {
+    const { handleChange, date, settingsVisible } = this;
+
+    const settings = settingsVisible
+      ? html`<settings-dialog></settings-dialog>`
+      : "";
+
     return html`
       <header>
         <img src="icons/axaLogo.svg" alt="logo" />
@@ -59,21 +72,26 @@ class TimeTracker extends LitElement {
         <button>
           <img src="icons/exit_to_app-24px.svg" alt="exportieren" />
         </button>
-        <button>
+        <button @click=${this.showSettings}>
           <img src="icons/settings-24px.svg" alt="Einstellungen" />
         </button>
       </header>
       <article>
-        <date-stepper @change=${this.handleChange}></date-stepper>
-        <time-manager date=${this.date}></time-manager>
-        <time-list date=${this.date}></time-list>
+        <date-stepper @change=${handleChange}></date-stepper>
+        <time-manager date=${date}></time-manager>
+        <time-list date=${date}></time-list>
         <checkin-toggle></checkin-toggle>
+        ${settings}
       </article>
     `;
   }
 
   handleChange = ({ detail: { date } }) => {
     this.date = date.toString();
+  };
+
+  showSettings = () => {
+    this.settingsVisible = !this.settingsVisible;
   };
 }
 
