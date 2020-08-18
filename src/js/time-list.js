@@ -3,14 +3,36 @@ import {
   html,
   LitElement,
 } from 'https://unpkg.com/lit-element/lit-element.js?module';
-import Persistence from './persistence.js';
+import {
+  decimal2HoursMinutes,
+  getTimePairs,
+  addTimeEvent,
+  deleteTimePair,
+  append,
+  setDate,
+  COMING,
+  GOING,
+  EMPTY,
+} from './date-manipulation.js';
 
 class TimeList extends LitElement {
   static get properties() {
     return {
-      date: { type: String },
+      items: { type: Array },
+      date: { type: Object },
       startStop: { type: String },
     };
+  }
+
+  set date(aDate) {
+    this._date = setDate(aDate);
+    (async () => {
+      this.items = await getTimePairs('time-pairs-only');
+    })();
+  }
+
+  get date() {
+    return this._date;
   }
 
   static get styles() {
@@ -94,46 +116,13 @@ class TimeList extends LitElement {
 
   constructor() {
     super();
-
-    this.store = Persistence.getInstance();
-    console.log(this.store.getItems());
-
-    this.items = [
-      {
-        start: '08:20',
-        stop: '09:22',
-      },
-      {
-        start: '10:20',
-        stop: '11:22',
-      },
-    ];
-  }
-
-  update(changedProperties) {
-    super.update(changedProperties);
-
-    if (changedProperties.has('startStop')) {
-      const date = new Date();
-
-      const currentTime = `${date
-        .getHours()
-        .toString()
-        .padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-
-      if (this.startStop === 'start') {
-        this.saveItem(undefined, {
-          start: currentTime,
-          stop: '',
-        });
-      } else if (this.items.length > 0) {
-        this.handleChange(this.items.length - 1, 'stop', currentTime);
-      }
-    }
+    (async () => {
+      this.items = await getTimePairs('time-pairs-only');
+    })();
   }
 
   render() {
-    const { items, handleClickAdd, handleClickDelete, handleChange } = this;
+    const { items = [], handleRowAction, handleAdd } = this;
 
     return html`
       <section>
@@ -143,31 +132,32 @@ class TimeList extends LitElement {
           </summary>
           <ol>
             ${items.map(
-              ({ start, stop, pause = '1:20' }, index) => html`
-                <li class="row">
+              ([start, stop], index) => html`
+                <li class="row" data-index="${index}">
                   <input
+                    class="start"
                     type="time"
-                    .value="${start}"
-                    @change="${(event) =>
-                      handleChange(index, 'start', event.target.value)}"
+                    .value="${decimal2HoursMinutes(start)}"
+                    @change="${handleRowAction}"
                   /><span>-</span
                   ><input
+                    class="stop"
                     type="time"
-                    .value="${stop}"
-                    @change="${(event) =>
-                      handleChange(index, 'stop', event.target.value)}"
+                    .value="${decimal2HoursMinutes(stop)}"
+                    @change="${handleRowAction}"
                   /><button
-                    @click="${() => handleClickDelete(index)}"
                     class="delete"
+                    @click="${handleRowAction}"
+                    data-index="${index}"
                   >
-                    <img src="icons/delete-24px.svg" />
+                    <img class="delete" src="icons/delete-24px.svg" />
                   </button>
                 </li>
               `
             )}
             <li class="rowplus">
-              <button @click="${handleClickAdd}" class="add">
-                <img src="icons/add-24dp.svg" />
+              <button class="add" @click="${handleAdd}">
+                <img class="add" src="icons/add-24dp.svg" />
               </button>
             </li>
           </ol>
@@ -176,34 +166,24 @@ class TimeList extends LitElement {
     `;
   }
 
-  handleClickDelete = (index) => {
-    this.items.splice(index, 1);
-    this.requestUpdate();
-
-    // delete from db
-  };
-
-  handleClickAdd() {
-    this.saveItem(undefined, { start: '', stop: '' });
+  async handleRowAction({ target }) {
+    const rowIndex = target.parentNode.dataset.index;
+    const { value, className } = target;
+    switch (className) {
+      case 'start':
+        this.items = await addTimeEvent(COMING, rowIndex, value);
+        break;
+      case 'stop':
+        this.items = await addTimeEvent(GOING, rowIndex, value);
+        break;
+      case 'delete':
+        this.items = await deleteTimePair(rowIndex);
+        break;
+    }
   }
 
-  handleChange = (index, which, text) => {
-    if (which === 'start') {
-      this.items[index].start = text;
-    } else {
-      this.items[index].stop = text;
-    }
-
-    this.saveItem(index, this.items[index]);
-  };
-
-  saveItem(index, item) {
-    if (index === undefined) {
-      this.items.push(item);
-    }
-
-    this.requestUpdate();
-    // save to db
+  async handleAdd() {
+    this.items = await addTimeEvent(EMPTY, append);
   }
 }
 

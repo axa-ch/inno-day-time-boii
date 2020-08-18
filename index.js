@@ -90,7 +90,7 @@ class TimeTracker extends LitElement {
       <article>
         <date-stepper @change=${handleDateChange}></date-stepper>
         <time-manager date=${date}></time-manager>
-        <time-list date=${date} .startStop="${startStop}"></time-list>
+        <time-list .date=${date} .startStop="${startStop}"></time-list>
         <checkin-toggle @change="${handleStartStop}"></checkin-toggle>
         <settings-dialog
           @close="${toggleSettings}"
@@ -105,7 +105,7 @@ class TimeTracker extends LitElement {
   }
 
   handleDateChange({ detail: { date } }) {
-    this.date = date.toString();
+      this.date = new Date(date);
   }
 
   toggleSettings() {

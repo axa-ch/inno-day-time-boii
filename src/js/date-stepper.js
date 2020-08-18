@@ -92,7 +92,7 @@ class DateStepper extends LitElement {
 
     return html`
       <div class="container">
-        <button class="previous" @click="${this.handleClick}">
+        <button class="previous" @click="${this.navigate}">
           <img
             class="previous"
             src="icons/keyboard_arrow_left-24px.svg"
@@ -103,7 +103,7 @@ class DateStepper extends LitElement {
           ${helpText}
           <p class="date">${formatDate()}</p>
         </div>
-        <button @click="${this.handleClick}">
+        <button @click="${this.navigate}">
           <img src="icons/keyboard_arrow_right-24px.svg" alt="weiter" />
         </button>
       </div>
@@ -115,7 +115,7 @@ class DateStepper extends LitElement {
     fireEvent('change', { date: this.date }, this);
   }
 
-  handleClick({ target }) {
+  navigate({ target }) {
     if (target.classList.contains('previous')) {
       previousDay();
     } else {

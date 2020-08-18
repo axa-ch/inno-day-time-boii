@@ -3,10 +3,7 @@ import {
   html,
   LitElement,
 } from 'https://unpkg.com/lit-element/lit-element.js?module';
-import Persistence from './persistence.js';
-
-// const decimalTime2HoursMinutes = (decimal) =>
-// `${Math.floor(decimal)}:${((decimal - Math.floor(decimal)) / 60).toFixed(0)}`;
+import { dailyHours } from './date-manipulation.js';
 
 class TimeManager extends LitElement {
   static get properties() {
@@ -45,12 +42,8 @@ class TimeManager extends LitElement {
   constructor() {
     super();
 
-    this.store = Persistence.getInstance();
-    const { date, store } = this;
-    this.currentDate = date ? new Date(date) : new Date();
-
     (async () => {
-      this.totalHours = await store.daily();
+      this.totalHours = await dailyHours();
     })();
   }
 
@@ -64,12 +57,7 @@ class TimeManager extends LitElement {
 
   getEndtime() {
     const { date, store } = this;
-    //const nowDecimal = store.add();
     return '18:15'; //decimalTime2HoursMinutes(nowDecimal + this.getWorkedHours());
-  }
-
-  changeShouldHours(ev) {
-    this.totalHours = +ev.target.value || TimeManager.totalHours;
   }
 
   render() {

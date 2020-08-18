@@ -10,6 +10,7 @@ const ACCUMULATED_HOURS_KEY = 'accumulatedHours';
 
 const COMING = 0;
 const GOING = 1;
+const EMPTY = 2;
 
 // module globals / state
 
@@ -51,11 +52,18 @@ const human2decimalTime = (humanReadableTime) => {
 };
 
 // API functions
-const getTimePairs = async () => {
+const decimal2HoursMinutes = (decimal) =>
+  `${Math.floor(decimal).toString().padStart(2, '0')}:${Math.round(
+    60 * (decimal - Math.floor(decimal))
+  )
+    .toString()
+    .padStart(2, '0')}`;
+
+const getTimePairs = async (noKey) => {
   const key = formatDateAsKey(date);
-  const timePairs = await get(key);
+  const timePairs = (await get(key)) || [];
   numTimePairs = timePairs.length;
-  return { timePairs, key };
+  return noKey ? timePairs : { timePairs, key };
 };
 
 // navigate to next day
@@ -75,6 +83,7 @@ const sameDay = (d1, d2 = date) =>
 const getDate = () => date;
 
 const setDate = (newDate) => {
+  if (!newDate) return;
   date = new Date(newDate);
   return getDate();
 };
@@ -122,18 +131,23 @@ const last = () => append(-1);
 // - addTimeEvent(COMING, append): append new time pair, fill in coming part
 // - addTimeEvent(GOING, last): edit last-appended time pair, fill in going part
 // - addTimeEvent(COMING, 3, '08:44'): edit time pair via random access, overwrite coming part
+// - addTimeEvent(EMPTY, append): append empty new time pair
 const addTimeEvent = async (which, where, humanReadableTime) => {
   const timeDecimal = human2decimalTime(humanReadableTime);
 
   const { timePairs, key } = await getTimePairs(); // side-effect: sets numTimePairs
 
-  const _where = typeof where === 'function' ? where() : where;
+  const _where = typeof where === 'function' ? where() : +where;
 
   timePairs[_where] = timePairs[_where] || [];
 
-  timePairs[_where][which] = timeDecimal;
+  if (which !== EMPTY) {
+    timePairs[_where][which] = timeDecimal;
+  }
 
   await set(key, timePairs);
+
+  return timePairs;
 };
 
 const deleteTimePair = async (where) => {
@@ -143,14 +157,14 @@ const deleteTimePair = async (where) => {
   const deleted = timePairs.splice(where, 1);
   // persist updated timePairs
   await set(key, timePairs);
-  // return the removed item to the caller
-  return deleted[0];
+  return timePairs;
 };
 
 // API
 export {
   COMING,
   GOING,
+  EMPTY,
   getTimePairs,
   today,
   yesterday,
@@ -161,6 +175,7 @@ export {
   getDate,
   setDate,
   formatDate,
+  decimal2HoursMinutes,
   dailyHours,
   yearlyHours,
   append,

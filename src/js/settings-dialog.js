@@ -5,7 +5,7 @@ import {
 } from 'https://unpkg.com/lit-element/lit-element.js?module';
 
 import fireEvent from './custom-event.js';
-import Persistence from './persistence.js';
+import { dailyHours } from './date-manipulation.js';
 
 class SettingsDialog extends LitElement {
   static get properties() {
@@ -17,10 +17,9 @@ class SettingsDialog extends LitElement {
 
   constructor() {
     super();
-    this.store = Persistence.getInstance();
     this.open = false;
     (async () => {
-      this.hoursPerDay = await this.store.daily();
+      this.hoursPerDay = await dailyHours();
     })();
     this.close = this.close.bind(this);
   }
@@ -114,7 +113,7 @@ class SettingsDialog extends LitElement {
     const dailyString = this.shadowRoot.querySelector('.daily').value;
     const newDaily = parseFloat(dailyString);
     if (isFinite(newDaily) && hoursPerDay !== newDaily) {
-      this.hoursPerDay = await store.daily(newDaily);
+      this.hoursPerDay = await dailyHours(newDaily);
       close();
     }
   }
