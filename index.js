@@ -3,13 +3,13 @@ import {
   css,
   html,
   LitElement,
-} from "https://unpkg.com/lit-element/lit-element.js?module";
+} from 'https://unpkg.com/lit-element/lit-element.js?module';
 
-import "./src/js/checkin-toggle.js";
-import "./src/js/date-stepper.js";
-import "./src/js/settings-dialog.js";
-import "./src/js/time-list.js";
-import "./src/js/time-manager.js";
+import './src/js/checkin-toggle.js';
+import './src/js/date-stepper.js';
+import './src/js/settings-dialog.js';
+import './src/js/time-list.js';
+import './src/js/time-manager.js';
 
 class TimeTracker extends LitElement {
   static get properties() {
@@ -72,7 +72,7 @@ class TimeTracker extends LitElement {
       handleStartStop,
       toggleSettings,
       date,
-      startStop,
+      startStop = 'stop',
       settingsVisible,
     } = this;
 
@@ -113,4 +113,4 @@ class TimeTracker extends LitElement {
   }
 }
 
-customElements.define("time-tracker", TimeTracker);
+customElements.define('time-tracker', TimeTracker);

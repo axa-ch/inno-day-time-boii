@@ -1,17 +1,17 @@
 import {
   css,
   html,
-  LitElement
-} from "https://unpkg.com/lit-element/lit-element.js?module";
+  LitElement,
+} from 'https://unpkg.com/lit-element/lit-element.js?module';
 
-import fireEvent from "./custom-event.js";
-import Persistence from "./persistence.js";
+import fireEvent from './custom-event.js';
+import Persistence from './persistence.js';
 
 class SettingsDialog extends LitElement {
   static get properties() {
     return {
       hoursPerDay: { type: Number },
-      open: { type: Boolean, reflect: true }
+      open: { type: Boolean, reflect: true },
     };
   }
 
@@ -106,12 +106,12 @@ class SettingsDialog extends LitElement {
   }
 
   close() {
-    fireEvent("close", null, this);
+    fireEvent('close', null, this);
   }
 
   async storeHoursPerDay() {
     const { store, close, hoursPerDay } = this;
-    const dailyString = this.shadowRoot.querySelector(".daily").value;
+    const dailyString = this.shadowRoot.querySelector('.daily').value;
     const newDaily = parseFloat(dailyString);
     if (isFinite(newDaily) && hoursPerDay !== newDaily) {
       this.hoursPerDay = await store.daily(newDaily);
@@ -120,4 +120,4 @@ class SettingsDialog extends LitElement {
   }
 }
 
-customElements.define("settings-dialog", SettingsDialog);
+customElements.define('settings-dialog', SettingsDialog);
