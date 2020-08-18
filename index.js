@@ -2,7 +2,7 @@
 import {
   css,
   html,
-  LitElement
+  LitElement,
 } from "https://unpkg.com/lit-element/lit-element.js?module";
 
 import "./src/js/checkin-toggle.js";
@@ -16,7 +16,7 @@ class TimeTracker extends LitElement {
     return {
       date: { type: String, reflect: true },
       settingsVisible: { type: Boolean },
-      startStop: { type: String }
+      startStop: { type: String },
     };
   }
 
@@ -41,6 +41,7 @@ class TimeTracker extends LitElement {
 
       img {
         height: 2.5rem;
+        vertical-align: middle;
       }
 
       h1 {
@@ -48,6 +49,7 @@ class TimeTracker extends LitElement {
         margin: 3px 0 0 1rem;
         font-size: 20px;
         font-weight: normal;
+        vertical-align: middle;
       }
 
       button {
@@ -71,7 +73,7 @@ class TimeTracker extends LitElement {
       toggleSettings,
       date,
       startStop,
-      settingsVisible
+      settingsVisible,
     } = this;
 
     return html`
