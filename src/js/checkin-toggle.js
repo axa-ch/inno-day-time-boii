@@ -1,7 +1,7 @@
 import {
   css,
   html,
-  LitElement
+  LitElement,
 } from "https://unpkg.com/lit-element/lit-element.js?module";
 import fireEvent from "./custom-event.js";
 
@@ -11,7 +11,7 @@ const STOP = "stop";
 class CheckinToggle extends LitElement {
   static get properties() {
     return {
-      activeButton: { type: String }
+      activeButton: { type: String },
     };
   }
 
@@ -43,7 +43,7 @@ class CheckinToggle extends LitElement {
         color: #fff;
         outline: none;
         cursor: pointer;
-        border-radius: 5px;
+        border-radius: 2px;
       }
 
       button[disabled] {

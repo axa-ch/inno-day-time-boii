@@ -32,7 +32,7 @@ class Store {
 
   _withIDBStore(type, callback) {
     return this._dbp.then(
-      db =>
+      (db) =>
         new Promise((resolve, reject) => {
           const transaction = db.transaction(this.storeName, type);
           transaction.oncomplete = () => resolve();
@@ -54,26 +54,26 @@ function getDefaultStore() {
 export function get(key, store = getDefaultStore()) {
   let req;
   return store
-    ._withIDBStore("readonly", store => {
+    ._withIDBStore("readonly", (store) => {
       req = store.get(key);
     })
     .then(() => req.result);
 }
 
 export function set(key, value, store = getDefaultStore()) {
-  return store._withIDBStore("readwrite", store => {
+  return store._withIDBStore("readwrite", (store) => {
     store.put(value, key);
   });
 }
 
 export function del(key, store = getDefaultStore()) {
-  return store._withIDBStore("readwrite", store => {
+  return store._withIDBStore("readwrite", (store) => {
     store.delete(key);
   });
 }
 
 export function clear(store = getDefaultStore()) {
-  return store._withIDBStore("readwrite", store => {
+  return store._withIDBStore("readwrite", (store) => {
     store.clear();
   });
 }
@@ -88,13 +88,13 @@ export function keys(store = getDefaultStore(), prefix = "") {
   );
   const keys = [];
   return store
-    ._withIDBStore("readonly", store => {
+    ._withIDBStore("readonly", (store) => {
       // This would be store.getAllKeys(), but it isn't supported by Edge or Safari.
       // And openKeyCursor isn't supported by Safari.
       (store.openKeyCursor || store.openCursor).call(
         store,
         keyRangeValue
-      ).onsuccess = function() {
+      ).onsuccess = function () {
         if (!this.result) return;
         const key = this.result.key;
         keys.push(key);
@@ -104,13 +104,13 @@ export function keys(store = getDefaultStore(), prefix = "") {
     .then(() => keys);
 }
 
-export const capacity = async inPercent => {
+export const capacity = async (inPercent) => {
   const info = await window.navigator.storage.estimate();
 
   const {
     quota,
     usage,
-    usageDetails: { indexedDB }
+    usageDetails: { indexedDB },
   } = info;
   return inPercent ? (100 * (indexedDB / quota)).toFixed(2) + " %" : info;
 };

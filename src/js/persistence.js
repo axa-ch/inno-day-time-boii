@@ -5,7 +5,7 @@ const DEFAULT_DAILY = 8.4;
 const DAILY_KEY = "dailyHours";
 const ACCUMULATED_HOURS_KEY = "accumulatedHours";
 
-const formatDateAsKey = date =>
+const formatDateAsKey = (date) =>
   `${date.getFullYear()}-0${date.getMonth()}-0${date.getDate()}`;
 
 const timeToDecimal = (hours, minutes) =>

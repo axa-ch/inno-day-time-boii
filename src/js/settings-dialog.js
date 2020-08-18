@@ -73,7 +73,7 @@ class SettingsDialog extends LitElement {
         text-transform: uppercase;
         color: #ffffff;
         cursor: pointer;
-        border-radius: 5px;
+        border-radius: 2px;
       }
 
       .close {
