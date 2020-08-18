@@ -3,10 +3,9 @@ import {
   html,
   LitElement,
 } from 'https://unpkg.com/lit-element/lit-element.js?module';
-import Persistence from './persistence.js';
 
-const PREV = 'prev';
-const NEXT = 'next';
+import { nextDay, previousDay } from './date-manipulation.js';
+
 const DEFAULT_LOCALE = 'de-CH';
 
 const sameDay = (d1, d2) =>
@@ -29,8 +28,6 @@ class DateStepper extends LitElement {
     } else {
       this.date = new Date();
     }
-
-    this.store = Persistence.getInstance();
   }
 
   static get styles() {
@@ -90,29 +87,34 @@ class DateStepper extends LitElement {
 
     return html`
       <div class="container">
-        <button @click="${() => this.handleClick(PREV)}">
+        <button data-navigate="-1" @click="${this.handleClick}">
           <img src="icons/keyboard_arrow_left-24px.svg" alt="zurück" />
         </button>
         <div class="date-wrapper">
           ${helpText}
           <p class="date">${this.getDate()}</p>
         </div>
-        <button @click="${() => this.handleClick(NEXT)}">
+        <button data-navigate="+1" @click="${this.handleClick}">
           <img src="icons/keyboard_arrow_right-24px.svg" alt="weiter" />
         </button>
       </div>
     `;
   }
 
-  // fire the inital date so that the other components know
+  // fire the initial date so that the other components know
   firstUpdated() {
     this.fireEvent();
   }
 
-  handleClick(mode = NEXT) {
-    this.date.setDate(this.date.getDate() + (mode === PREV ? -1 : 1));
+  handleClick({ target }) {
+    const direction = parseInt(target.dataset.navigate, 10) || 0;
+    this.date.setDate(this.date.getDate() + direction);
     this.value = this.date.toString();
-
+    if (direction < 0) {
+      previousDay();
+    } else {
+      nextDay();
+    }
     this.fireEvent();
   }
 
