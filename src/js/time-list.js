@@ -1,9 +1,9 @@
-import Persistence from "./persistence.js";
 import {
-  LitElement,
-  html,
   css,
+  html,
+  LitElement,
 } from "https://unpkg.com/lit-element/lit-element.js?module";
+import Persistence from "./persistence.js";
 
 class TimeList extends LitElement {
   static get properties() {
@@ -85,32 +85,46 @@ class TimeList extends LitElement {
 
   constructor() {
     super();
+
     this.store = Persistence.getInstance();
-    //this.store2.add('08:20',0, 'newindex')
     console.log(this.store.getItems());
 
     this.items = [
       {
         start: "08:20",
-        end: "09:22",
+        stop: "09:22",
       },
       {
         start: "10:20",
-        end: "11:22",
+        stop: "11:22",
       },
     ];
   }
 
-  handleClickDelete(ev) {
-    console.log(ev.target.parentElement);
-  }
+  update(changedProperties) {
+    super.update(changedProperties);
 
-  handleClickAdd(ev) {
-    console.log(ev.target.parentElement);
+    if (changedProperties.has("startStop")) {
+      const date = new Date();
+
+      const currentTime = `${date
+        .getHours()
+        .toString()
+        .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
+
+      if (this.startStop === "start") {
+        this.saveItem(undefined, {
+          start: currentTime,
+          stop: "",
+        });
+      } else if (this.items.length > 0) {
+        this.handleChange(this.items.length - 1, "stop", currentTime);
+      }
+    }
   }
 
   render() {
-    const { items, handleClickAdd, handleClickDelete } = this;
+    const { items, handleClickAdd, handleClickDelete, handleChange } = this;
 
     return html`
       <section>
@@ -120,12 +134,20 @@ class TimeList extends LitElement {
           </summary>
           <ol>
             ${items.map(
-              ({ start, end, pause = "1:20" }) => html`
+              ({ start, stop, pause = "1:20" }, index) => html`
                 <li class="row">
-                  <input type="time" value="${start}" /><span>-</span
-                  ><input type="time" value="${end}" /><button
-                    @click="${handleClickDelete}"
-                  >
+                  <input
+                    type="time"
+                    .value="${start}"
+                    @change="${(event) =>
+                      handleChange(index, "start", event.target.value)}"
+                  /><span>-</span
+                  ><input
+                    type="time"
+                    .value="${stop}"
+                    @change="${(event) =>
+                      handleChange(index, "stop", event.target.value)}"
+                  /><button @click="${() => handleClickDelete(index)}">
                     <img src="icons/delete-24px.svg" />
                   </button>
                 </li>
@@ -141,6 +163,36 @@ class TimeList extends LitElement {
         </details>
       </section>
     `;
+  }
+
+  handleClickDelete = (index) => {
+    this.items.splice(index, 1);
+    this.requestUpdate();
+
+    // delete from db
+  };
+
+  handleClickAdd() {
+    this.saveItem(undefined, { start: "", stop: "" });
+  }
+
+  handleChange = (index, which, text) => {
+    if (which === "start") {
+      this.items[index].start = text;
+    } else {
+      this.items[index].stop = text;
+    }
+
+    this.saveItem(index, this.items[index]);
+  };
+
+  saveItem(index, item) {
+    if (index === undefined) {
+      this.items.push(item);
+    }
+
+    this.requestUpdate();
+    // save to db
   }
 }
 

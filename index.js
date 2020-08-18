@@ -72,7 +72,7 @@ class TimeTracker extends LitElement {
       handleStartStop,
       toggleSettings,
       date,
-      startStop,
+      startStop = "stop",
       settingsVisible,
     } = this;
 
