@@ -4,14 +4,19 @@ import {
   LitElement,
 } from 'https://unpkg.com/lit-element/lit-element.js?module';
 
-import { nextDay, previousDay } from './date-manipulation.js';
+import {
+  nextDay,
+  previousDay,
+  sameDay,
+  today,
+  yesterday,
+  tomorrow,
+  getDate,
+  setDate,
+  formatDate,
+} from './date-manipulation.js';
 
-const DEFAULT_LOCALE = 'de-CH';
-
-const sameDay = (d1, d2) =>
-  d1.getFullYear() === d2.getFullYear() &&
-  d1.getMonth() === d2.getMonth() &&
-  d1.getDate() === d2.getDate();
+import fireEvent from './custom-event.js';
 
 class DateStepper extends LitElement {
   static get properties() {
@@ -24,9 +29,9 @@ class DateStepper extends LitElement {
     super();
 
     if (this.value) {
-      this.date = new Date(this.value);
+      this.date = setDate(this.value);
     } else {
-      this.date = new Date();
+      this.date = getDate();
     }
   }
 
@@ -87,14 +92,18 @@ class DateStepper extends LitElement {
 
     return html`
       <div class="container">
-        <button data-navigate="-1" @click="${this.handleClick}">
-          <img src="icons/keyboard_arrow_left-24px.svg" alt="zurück" />
+        <button class="previous" @click="${this.handleClick}">
+          <img
+            class="previous"
+            src="icons/keyboard_arrow_left-24px.svg"
+            alt="zurück"
+          />
         </button>
         <div class="date-wrapper">
           ${helpText}
-          <p class="date">${this.getDate()}</p>
+          <p class="date">${formatDate()}</p>
         </div>
-        <button data-navigate="+1" @click="${this.handleClick}">
+        <button @click="${this.handleClick}">
           <img src="icons/keyboard_arrow_right-24px.svg" alt="weiter" />
         </button>
       </div>
@@ -103,63 +112,35 @@ class DateStepper extends LitElement {
 
   // fire the initial date so that the other components know
   firstUpdated() {
-    this.fireEvent();
+    fireEvent('change', { date: this.date }, this);
   }
 
   handleClick({ target }) {
-    const direction = parseInt(target.dataset.navigate, 10) || 0;
-    this.date.setDate(this.date.getDate() + direction);
-    this.value = this.date.toString();
-    if (direction < 0) {
+    if (target.classList.contains('previous')) {
       previousDay();
     } else {
       nextDay();
     }
-    this.fireEvent();
-  }
 
-  fireEvent() {
-    // fire up change
-    const event = new CustomEvent('change', {
-      detail: {
-        date: this.date,
-      },
-    });
-
-    this.dispatchEvent(event);
+    this.date = getDate();
+    this.value = this.date.toString();
+    fireEvent('change', { date: this.date }, this);
   }
 
   getHelpText() {
-    const today = new Date();
-
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    if (sameDay(this.date, today)) {
+    if (sameDay(today)) {
       return 'Heute';
     }
 
-    if (sameDay(this.date, yesterday)) {
+    if (sameDay(yesterday)) {
       return 'Gestern';
     }
 
-    if (sameDay(this.date, tomorrow)) {
+    if (sameDay(tomorrow)) {
       return 'Morgen';
     }
 
     return;
-  }
-
-  getDate() {
-    return this.date.toLocaleDateString(DEFAULT_LOCALE, {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
   }
 }
 
