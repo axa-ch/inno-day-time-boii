@@ -27,11 +27,17 @@ class TimeManager extends LitElement {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin: 0 1rem;
-        padding: 1rem;
-        font-size: 16px;
+        margin: 0 20px;
+        padding: 15px 20px;
+        font-size: 20px;
         background-color: #f2f2f2;
         white-space: nowrap;
+        border-radius: 2px;
+      }
+
+      img {
+        width: 25px;
+        vertical-align: bottom;
       }
     `;
   }
@@ -70,11 +76,14 @@ class TimeManager extends LitElement {
     return html`
       <section>
         <p class="info">
-          <span>Feierabend: &nbsp; ${this.getEndtime()}</span>
-          <label>
-            Stunden:
-            <input maxlength="4" type="time" value="${'08:24'}" readonly />
-          </label>
+          <span>
+            <img src="icons/hourglass_bottom-24px.svg" />
+            08:24
+          </span>
+          <span
+            ><img src="icons/directions_run-24px.svg" />
+            ${this.getEndtime()}</span
+          >
         </p>
       </section>
     `;

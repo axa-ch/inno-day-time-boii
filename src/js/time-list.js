@@ -21,7 +21,7 @@ class TimeList extends LitElement {
       }
 
       section {
-        margin: 20px;
+        margin: 20px 20px 0;
       }
 
       details,
@@ -31,8 +31,10 @@ class TimeList extends LitElement {
       }
 
       ol {
-        margin: 20px 0;
-        padding: 0;
+        margin: 20px 0 0;
+        padding: 20px;
+        background: #f2f2f2;
+        border-radius: 2px;
       }
 
       .row {
@@ -42,8 +44,10 @@ class TimeList extends LitElement {
 
       .row input {
         flex: 1;
-        height: 30px;
-        font-size: 15px;
+        padding: 0.6rem;
+        border: 1px solid #cccccc;
+        border-radius: 2px;
+        font-size: 14px;
       }
 
       .row span {
@@ -52,10 +56,11 @@ class TimeList extends LitElement {
       }
 
       .delete {
-        margin-left: 20px;
+        margin-left: 15px;
         padding: 0;
         border: none;
         background: none;
+        cursor: pointer;
       }
 
       .delete img {
@@ -72,14 +77,21 @@ class TimeList extends LitElement {
 
       .rowplus {
         display: flex;
+        justify-content: center;
       }
 
       .add {
+        height: 40px;
         width: 40px;
         padding: 0;
         border-radius: 50%;
         border: none;
         background: #00008f;
+        cursor: pointer;
+      }
+
+      .add img {
+        vertical-align: middle;
       }
     `;
   }
@@ -160,9 +172,9 @@ class TimeList extends LitElement {
                 </li>
               `
             )}
-            <li class="row">
+            <li class="rowplus">
               <button @click="${handleClickAdd}" class="add">
-                <img src="icons/add-24px.svg" />
+                <img src="icons/add-24dp.svg" />
               </button>
             </li>
           </ol>
