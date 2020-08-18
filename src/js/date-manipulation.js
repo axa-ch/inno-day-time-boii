@@ -1,15 +1,28 @@
 import { get, set } from './indexed-db.js';
 
 // constants
+const DEFAULT_LOCALE = 'de-CH';
+
 const DEFAULT_DAILY = 8.4;
+
 const DAILY_KEY = 'dailyHours';
 const ACCUMULATED_HOURS_KEY = 'accumulatedHours';
+
 const COMING = 0;
 const GOING = 1;
 
 // module globals / state
 
+const today = new Date();
+
+const yesterday = new Date();
+yesterday.setDate(yesterday.getDate() - 1);
+
+const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
+
 let date = new Date();
+
 let numTimePairs = 0;
 
 // helper functions
@@ -47,12 +60,32 @@ const getTimePairs = async () => {
 
 // navigate to next day
 const nextDay = (offset = 1) => {
-  date = date.setDate(date.getDate() + offset);
+  date.setDate(date.getDate() + offset);
   return date;
 };
 
 // navigate to previous day
 const previousDay = () => nextDay(-1);
+
+const sameDay = (d1, d2 = date) =>
+  d1.getFullYear() === d2.getFullYear() &&
+  d1.getMonth() === d2.getMonth() &&
+  d1.getDate() === d2.getDate();
+
+const getDate = () => date;
+
+const setDate = (newDate) => {
+  date = new Date(newDate);
+  return getDate();
+};
+
+const formatDate = (aDate = date) =>
+  aDate.toLocaleDateString(DEFAULT_LOCALE, {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 
 const dailyHours = async (hours) => {
   // fetch persisted daily goal (in decimal hours, e.g. 8.4)
@@ -119,8 +152,15 @@ export {
   COMING,
   GOING,
   getTimePairs,
+  today,
+  yesterday,
+  tomorrow,
   nextDay,
   previousDay,
+  sameDay,
+  getDate,
+  setDate,
+  formatDate,
   dailyHours,
   yearlyHours,
   append,
