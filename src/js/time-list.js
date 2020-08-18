@@ -2,14 +2,14 @@ import Persistence from "./persistence.js";
 import {
   LitElement,
   html,
-  css
+  css,
 } from "https://unpkg.com/lit-element/lit-element.js?module";
 
 class TimeList extends LitElement {
   static get properties() {
     return {
       date: { type: String },
-      startStop: { type: String }
+      startStop: { type: String },
     };
   }
 
@@ -92,12 +92,12 @@ class TimeList extends LitElement {
     this.items = [
       {
         start: "08:20",
-        end: "09:22"
+        end: "09:22",
       },
       {
         start: "10:20",
-        end: "11:22"
-      }
+        end: "11:22",
+      },
     ];
   }
 
@@ -126,7 +126,7 @@ class TimeList extends LitElement {
                   ><input type="time" value="${end}" /><button
                     @click="${handleClickDelete}"
                   >
-                    <img src="../src/icons/delete_forever-24px.svg" />
+                    <img src="icons/delete-24px.svg" />
                   </button>
                 </li>
                 <li class="rowpause">

@@ -2,17 +2,17 @@ import Persistence from "./persistence.js";
 import {
   LitElement,
   html,
-  css
+  css,
 } from "https://unpkg.com/lit-element/lit-element.js?module";
 
-const decimalTime2HoursMinutes = decimal =>
+const decimalTime2HoursMinutes = (decimal) =>
   `${Math.floor(decimal)}:${((decimal - Math.floor(decimal)) / 60).toFixed(0)}`;
 
 class TimeManager extends LitElement {
   static get properties() {
     return {
       date: { type: String },
-      totalHours: { type: Number }
+      totalHours: { type: Number },
     };
   }
 

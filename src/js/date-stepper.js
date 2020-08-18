@@ -1,7 +1,7 @@
 import {
   css,
   html,
-  LitElement
+  LitElement,
 } from "https://unpkg.com/lit-element/lit-element.js?module";
 import Persistence from "./persistence.js";
 
@@ -17,7 +17,7 @@ const sameDay = (d1, d2) =>
 class DateStepper extends LitElement {
   static get properties() {
     return {
-      value: { type: String, reflect: true }
+      value: { type: String, reflect: true },
     };
   }
 
@@ -81,9 +81,7 @@ class DateStepper extends LitElement {
 
   render() {
     const helpText = this.getHelpText()
-      ? html`
-          <p class="helpText">${this.getHelpText()}</p>
-        `
+      ? html` <p class="helpText">${this.getHelpText()}</p> `
       : "";
 
     return html`
@@ -118,8 +116,8 @@ class DateStepper extends LitElement {
     // fire up change
     const event = new CustomEvent("change", {
       detail: {
-        date: this.date
-      }
+        date: this.date,
+      },
     });
 
     this.dispatchEvent(event);
@@ -154,7 +152,7 @@ class DateStepper extends LitElement {
       weekday: "long",
       year: "numeric",
       month: "long",
-      day: "numeric"
+      day: "numeric",
     });
   }
 }

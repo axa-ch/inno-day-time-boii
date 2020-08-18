@@ -10,7 +10,7 @@ export default (
   const event = new CustomEvent(eventName, {
     detail,
     bubbles,
-    composed
+    composed,
   });
   target.dispatchEvent(event);
 };

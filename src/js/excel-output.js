@@ -21,19 +21,19 @@ const excelExport = (table, worksheet = "Worksheet") => {
         </body>
     </html>`;
 
-  const base64 = string => window.btoa(unescape(encodeURIComponent(string)));
+  const base64 = (string) => window.btoa(unescape(encodeURIComponent(string)));
 
   window.location.href =
     "data:application/vnd.ms-excel;base64," + base64(TEMPLATE);
 };
 
-export const timeSheet2Excel = timeSheet => {
+export const timeSheet2Excel = (timeSheet) => {
   const { header = [], rows = [] } = timeSheet;
 
   const columnHeader = ({ colspan, title = "" }) =>
     `<tr><th${colspan ? ' colspan="' + colspan + '"' : ""}>${title}</th></tr>`;
 
-  const PROLOGUE = columnHeaders =>
+  const PROLOGUE = (columnHeaders) =>
     `<thead>${columnHeaders.map(columnHeader)}</thead><tbody>`;
 
   const EPILOGUE = "</tbody>";
