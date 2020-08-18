@@ -1,9 +1,9 @@
-import { get, set } from "./indexed-db.js";
+import { get, set } from './indexed-db.js';
 
 // helpers
 const DEFAULT_DAILY = 8.4;
-const DAILY_KEY = "dailyHours";
-const ACCUMULATED_HOURS_KEY = "accumulatedHours";
+const DAILY_KEY = 'dailyHours';
+const ACCUMULATED_HOURS_KEY = 'accumulatedHours';
 
 const formatDateAsKey = (date) =>
   `${date.getFullYear()}-0${date.getMonth()}-0${date.getDate()}`;

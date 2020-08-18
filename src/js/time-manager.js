@@ -1,9 +1,9 @@
-import Persistence from "./persistence.js";
+import Persistence from './persistence.js';
 import {
   LitElement,
   html,
   css,
-} from "https://unpkg.com/lit-element/lit-element.js?module";
+} from 'https://unpkg.com/lit-element/lit-element.js?module';
 
 const decimalTime2HoursMinutes = (decimal) =>
   `${Math.floor(decimal)}:${((decimal - Math.floor(decimal)) / 60).toFixed(0)}`;
@@ -63,7 +63,7 @@ class TimeManager extends LitElement {
   getEndtime() {
     const { date, store } = this;
     //const nowDecimal = store.add();
-    return "18:15"; //decimalTime2HoursMinutes(nowDecimal + this.getWorkedHours());
+    return '18:15'; //decimalTime2HoursMinutes(nowDecimal + this.getWorkedHours());
   }
 
   changeShouldHours(ev) {
@@ -77,7 +77,7 @@ class TimeManager extends LitElement {
           <span>Feierabend: &nbsp; ${this.getEndtime()}</span>
           <label
             >Stunden:&nbsp;
-            <input maxlength="4" type="time" value="${"08:24"}" readonly />
+            <input maxlength="4" type="time" value="${'08:24'}" readonly />
           </label>
         </p>
       </section>
@@ -85,4 +85,4 @@ class TimeManager extends LitElement {
   }
 }
 
-customElements.define("time-manager", TimeManager);
+customElements.define('time-manager', TimeManager);

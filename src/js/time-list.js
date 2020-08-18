@@ -2,8 +2,8 @@ import {
   css,
   html,
   LitElement,
-} from "https://unpkg.com/lit-element/lit-element.js?module";
-import Persistence from "./persistence.js";
+} from 'https://unpkg.com/lit-element/lit-element.js?module';
+import Persistence from './persistence.js';
 
 class TimeList extends LitElement {
   static get properties() {
@@ -91,12 +91,12 @@ class TimeList extends LitElement {
 
     this.items = [
       {
-        start: "08:20",
-        stop: "09:22",
+        start: '08:20',
+        stop: '09:22',
       },
       {
-        start: "10:20",
-        stop: "11:22",
+        start: '10:20',
+        stop: '11:22',
       },
     ];
   }
@@ -104,21 +104,21 @@ class TimeList extends LitElement {
   update(changedProperties) {
     super.update(changedProperties);
 
-    if (changedProperties.has("startStop")) {
+    if (changedProperties.has('startStop')) {
       const date = new Date();
 
       const currentTime = `${date
         .getHours()
         .toString()
-        .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
+        .padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
 
-      if (this.startStop === "start") {
+      if (this.startStop === 'start') {
         this.saveItem(undefined, {
           start: currentTime,
-          stop: "",
+          stop: '',
         });
       } else if (this.items.length > 0) {
-        this.handleChange(this.items.length - 1, "stop", currentTime);
+        this.handleChange(this.items.length - 1, 'stop', currentTime);
       }
     }
   }
@@ -134,19 +134,19 @@ class TimeList extends LitElement {
           </summary>
           <ol>
             ${items.map(
-              ({ start, stop, pause = "1:20" }, index) => html`
+              ({ start, stop, pause = '1:20' }, index) => html`
                 <li class="row">
                   <input
                     type="time"
                     .value="${start}"
                     @change="${(event) =>
-                      handleChange(index, "start", event.target.value)}"
+                      handleChange(index, 'start', event.target.value)}"
                   /><span>-</span
                   ><input
                     type="time"
                     .value="${stop}"
                     @change="${(event) =>
-                      handleChange(index, "stop", event.target.value)}"
+                      handleChange(index, 'stop', event.target.value)}"
                   /><button @click="${() => handleClickDelete(index)}">
                     <img src="icons/delete-24px.svg" />
                   </button>
@@ -173,11 +173,11 @@ class TimeList extends LitElement {
   };
 
   handleClickAdd() {
-    this.saveItem(undefined, { start: "", stop: "" });
+    this.saveItem(undefined, { start: '', stop: '' });
   }
 
   handleChange = (index, which, text) => {
-    if (which === "start") {
+    if (which === 'start') {
       this.items[index].start = text;
     } else {
       this.items[index].stop = text;
@@ -196,4 +196,4 @@ class TimeList extends LitElement {
   }
 }
 
-customElements.define("time-list", TimeList);
+customElements.define('time-list', TimeList);

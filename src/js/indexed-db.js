@@ -17,7 +17,7 @@ Modified by Markus Walther.
 */
 
 class Store {
-  constructor(dbName = "keyval-store", storeName = "keyval") {
+  constructor(dbName = 'keyval-store', storeName = 'keyval') {
     this.storeName = storeName;
     this._dbp = new Promise((resolve, reject) => {
       const openreq = indexedDB.open(dbName, 1);
@@ -54,41 +54,41 @@ function getDefaultStore() {
 export function get(key, store = getDefaultStore()) {
   let req;
   return store
-    ._withIDBStore("readonly", (store) => {
+    ._withIDBStore('readonly', (store) => {
       req = store.get(key);
     })
     .then(() => req.result);
 }
 
 export function set(key, value, store = getDefaultStore()) {
-  return store._withIDBStore("readwrite", (store) => {
+  return store._withIDBStore('readwrite', (store) => {
     store.put(value, key);
   });
 }
 
 export function del(key, store = getDefaultStore()) {
-  return store._withIDBStore("readwrite", (store) => {
+  return store._withIDBStore('readwrite', (store) => {
     store.delete(key);
   });
 }
 
 export function clear(store = getDefaultStore()) {
-  return store._withIDBStore("readwrite", (store) => {
+  return store._withIDBStore('readwrite', (store) => {
     store.clear();
   });
 }
 
-export function keys(store = getDefaultStore(), prefix = "") {
+export function keys(store = getDefaultStore(), prefix = '') {
   // cf. https://hacks.mozilla.org/2014/06/breaking-the-borders-of-indexeddb/, section startsWith(str)!
   const keyRangeValue = IDBKeyRange.bound(
     prefix,
-    prefix + "\uffff",
+    prefix + '\uffff',
     false,
     false
   );
   const keys = [];
   return store
-    ._withIDBStore("readonly", (store) => {
+    ._withIDBStore('readonly', (store) => {
       // This would be store.getAllKeys(), but it isn't supported by Edge or Safari.
       // And openKeyCursor isn't supported by Safari.
       (store.openKeyCursor || store.openCursor).call(
@@ -112,5 +112,5 @@ export const capacity = async (inPercent) => {
     usage,
     usageDetails: { indexedDB },
   } = info;
-  return inPercent ? (100 * (indexedDB / quota)).toFixed(2) + " %" : info;
+  return inPercent ? (100 * (indexedDB / quota)).toFixed(2) + ' %' : info;
 };

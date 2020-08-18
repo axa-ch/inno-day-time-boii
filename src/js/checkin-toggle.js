@@ -2,11 +2,11 @@ import {
   css,
   html,
   LitElement,
-} from "https://unpkg.com/lit-element/lit-element.js?module";
-import fireEvent from "./custom-event.js";
+} from 'https://unpkg.com/lit-element/lit-element.js?module';
+import fireEvent from './custom-event.js';
 
-const START = "start";
-const STOP = "stop";
+const START = 'start';
+const STOP = 'stop';
 
 class CheckinToggle extends LitElement {
   static get properties() {
@@ -101,8 +101,8 @@ class CheckinToggle extends LitElement {
     const newState = oldState === START ? STOP : START;
     this.activeButton = newState;
     // notify parent(s)
-    fireEvent("change", oldState, this);
+    fireEvent('change', oldState, this);
   }
 }
 
-customElements.define("checkin-toggle", CheckinToggle);
+customElements.define('checkin-toggle', CheckinToggle);
