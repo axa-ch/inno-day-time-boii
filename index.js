@@ -81,7 +81,7 @@ class TimeTracker extends LitElement {
         <img src="icons/axaLogo.svg" alt="logo" />
         <h1>TimeTracker</h1>
         <button>
-          <img src="icons/exit_to_app-24px.svg" alt="exportieren" />
+          <img src="icons/save_alt-24px.svg" alt="exportieren" />
         </button>
         <button @click=${toggleSettings}>
           <img src="icons/settings-24px.svg" alt="Einstellungen" />

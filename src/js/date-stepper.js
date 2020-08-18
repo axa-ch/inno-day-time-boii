@@ -76,6 +76,10 @@ class DateStepper extends LitElement {
         outline: none;
         cursor: pointer;
       }
+
+      button img {
+        vertical-align: middle;
+      }
     `;
   }
 

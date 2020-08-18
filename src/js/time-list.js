@@ -20,23 +20,19 @@ class TimeList extends LitElement {
         color: #333;
       }
 
+      section {
+        margin: 20px;
+      }
+
       details,
       summary {
         outline: none;
         font-size: 16px;
       }
 
-      section {
-        margin: 20px 20px 90px;
-      }
-
-      .rowpause {
-        display: flex;
-        justify-content: center;
-      }
-
-      .rowplus {
-        display: flex;
+      ol {
+        margin: 20px 0;
+        padding: 0;
       }
 
       .row {
@@ -44,41 +40,46 @@ class TimeList extends LitElement {
         align-items: center;
       }
 
-      .row > button > img {
-        width: 30px;
-        height: 30px;
-      }
-
-      .row > input {
-        width: 80px;
+      .row input {
+        flex: 1;
         height: 30px;
         font-size: 15px;
       }
 
-      .row > span {
-        margin: 20px;
+      .row span {
+        margin: 0 20px;
+        font-weight: bold;
       }
 
-      .row > button {
-        margin-left: auto;
-        margin-right: 50px;
-        height: 36px;
-      }
-
-      .add {
-        font-family: -webkit-pictograph, monospace;
-        font-size: 32px;
-        line-height: 1;
-        padding-bottom: 4px;
-        background: #00008f;
-        color: #fff;
-        width: 46px;
-        border-radius: 5px;
+      .delete {
+        margin-left: 20px;
+        padding: 0;
         border: none;
+        background: none;
+      }
+
+      .delete img {
+        width: 25px;
+        vertical-align: middle;
       }
 
       .rowpause {
+        display: flex;
+        justify-content: center;
+        margin: 10px 0 20px;
         color: #999;
+      }
+
+      .rowplus {
+        display: flex;
+      }
+
+      .add {
+        width: 40px;
+        padding: 0;
+        border-radius: 50%;
+        border: none;
+        background: #00008f;
       }
     `;
   }
@@ -147,7 +148,10 @@ class TimeList extends LitElement {
                     .value="${stop}"
                     @change="${(event) =>
                       handleChange(index, 'stop', event.target.value)}"
-                  /><button @click="${() => handleClickDelete(index)}">
+                  /><button
+                    @click="${() => handleClickDelete(index)}"
+                    class="delete"
+                  >
                     <img src="icons/delete-24px.svg" />
                   </button>
                 </li>
@@ -157,7 +161,9 @@ class TimeList extends LitElement {
               `
             )}
             <li class="row">
-              <button @click="${handleClickAdd}" class="add">+</button>
+              <button @click="${handleClickAdd}" class="add">
+                <img src="icons/add-24px.svg" />
+              </button>
             </li>
           </ol>
         </details>

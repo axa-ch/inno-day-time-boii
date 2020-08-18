@@ -1,12 +1,12 @@
-import Persistence from './persistence.js';
 import {
-  LitElement,
-  html,
   css,
+  html,
+  LitElement,
 } from 'https://unpkg.com/lit-element/lit-element.js?module';
+import Persistence from './persistence.js';
 
-const decimalTime2HoursMinutes = (decimal) =>
-  `${Math.floor(decimal)}:${((decimal - Math.floor(decimal)) / 60).toFixed(0)}`;
+// const decimalTime2HoursMinutes = (decimal) =>
+// `${Math.floor(decimal)}:${((decimal - Math.floor(decimal)) / 60).toFixed(0)}`;
 
 class TimeManager extends LitElement {
   static get properties() {
@@ -22,31 +22,27 @@ class TimeManager extends LitElement {
         font-family: sans-serif;
         color: #333;
       }
+
       .info {
         display: flex;
         justify-content: space-between;
-        width: 90%;
-        padding: 1rem 42px;
-        font-size: 20px;
-        margin: 2rem 1rem 0 1rem;
-        width: 87%;
+        align-items: center;
+        margin: 0 1rem;
+        padding: 1rem;
+        font-size: 16px;
         background-color: #f2f2f2;
         white-space: nowrap;
-      }
-
-      details,
-      summary {
-        outline: none;
-        font-size: 2rem;
       }
     `;
   }
 
   constructor() {
     super();
+
     this.store = Persistence.getInstance();
     const { date, store } = this;
     this.currentDate = date ? new Date(date) : new Date();
+
     (async () => {
       this.totalHours = await store.daily();
     })();
@@ -75,8 +71,8 @@ class TimeManager extends LitElement {
       <section>
         <p class="info">
           <span>Feierabend: &nbsp; ${this.getEndtime()}</span>
-          <label
-            >Stunden:&nbsp;
+          <label>
+            Stunden:
             <input maxlength="4" type="time" value="${'08:24'}" readonly />
           </label>
         </p>

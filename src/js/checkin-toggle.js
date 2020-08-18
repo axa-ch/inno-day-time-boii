@@ -25,7 +25,7 @@ class CheckinToggle extends LitElement {
     return css`
       .container {
         display: flex;
-        padding: 10px;
+        padding: 15px;
         background: #ffffff;
         color: #fff;
       }
@@ -34,7 +34,7 @@ class CheckinToggle extends LitElement {
         display: flex;
         flex: 1;
         height: 45px;
-        margin: 10px;
+        margin: 5px;
         align-items: center;
         justify-content: center;
         border: none;
