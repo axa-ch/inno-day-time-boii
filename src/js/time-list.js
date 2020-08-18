@@ -126,7 +126,7 @@ class TimeList extends LitElement {
                   ><input type="time" value="${end}" /><button
                     @click="${handleClickDelete}"
                   >
-                    <img src="../src/icons/delete_forever-24px.svg" />
+                    <img src="icons/delete-24px.svg" />
                   </button>
                 </li>
                 <li class="rowpause">
