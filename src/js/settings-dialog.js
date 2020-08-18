@@ -46,27 +46,27 @@ class SettingsDialog extends LitElement {
         padding: 20px;
         background: #ffffff;
         box-shadow: 0px 0 4px rgba(0, 0, 0, 0.25);
+        border-radius: 2px;
       }
 
       label {
         display: block;
-        margin: 0 0 1rem;
         font-size: 14px;
         font-weight: bold;
       }
 
       input {
         width: 100%;
-        margin-top: 6px;
-        padding: 0.6rem;
+        margin: 10px 0 15px;
+        padding: 10px 20px;
         box-sizing: border-box;
         border: 1px solid #cccccc;
         font-size: 14px;
       }
 
       button {
-        margin-right: 0.6rem;
-        padding: 0.6rem 1.2rem;
+        margin: 0 5px 0 0;
+        padding: 10px 20px;
         background: #00008f;
         border: none;
         outline: none;

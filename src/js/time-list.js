@@ -28,25 +28,27 @@ class TimeList extends LitElement {
       summary {
         outline: none;
         font-size: 16px;
+        font-weight: bold;
       }
 
       ol {
         margin: 20px 0 0;
-        padding: 20px;
+        padding: 10px;
         background: #f2f2f2;
         border-radius: 2px;
       }
 
       .row {
         display: flex;
+        margin: 10px;
         align-items: center;
       }
 
       .row input {
         flex: 1;
-        padding: 0.6rem;
+        padding: 10px;
+        box-sizing: border-box;
         border: 1px solid #cccccc;
-        border-radius: 2px;
         font-size: 14px;
       }
 
@@ -68,16 +70,10 @@ class TimeList extends LitElement {
         vertical-align: middle;
       }
 
-      .rowpause {
-        display: flex;
-        justify-content: center;
-        margin: 10px 0 20px;
-        color: #999;
-      }
-
       .rowplus {
         display: flex;
         justify-content: center;
+        padding: 10px;
       }
 
       .add {
@@ -143,7 +139,7 @@ class TimeList extends LitElement {
       <section>
         <details open>
           <summary>
-            Eingetragene Zeiten:
+            Eingetragene Zeiten
           </summary>
           <ol>
             ${items.map(
@@ -166,9 +162,6 @@ class TimeList extends LitElement {
                   >
                     <img src="icons/delete-24px.svg" />
                   </button>
-                </li>
-                <li class="rowpause">
-                  ${pause} Abwesenheit
                 </li>
               `
             )}
