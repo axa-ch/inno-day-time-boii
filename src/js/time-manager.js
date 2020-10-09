@@ -3,7 +3,13 @@ import {
   html,
   LitElement,
 } from 'https://unpkg.com/lit-element/lit-element.js?module';
-import {dailyHours, decimal2HoursMinutes, getTimePairs, timeToDecimal, human2decimalTime} from './date-manipulation.js';
+import {
+  dailyHours,
+  decimal2HoursMinutes,
+  getTimePairs,
+  timeToDecimal,
+  human2decimalTime,
+} from './date-manipulation.js';
 
 class TimeManager extends LitElement {
   static get properties() {
@@ -47,6 +53,9 @@ class TimeManager extends LitElement {
     //init
     this.workedHours = 0;
     this.endTime = 0;
+
+    // install event handler
+    this.addEventListener('refresh', () => this.refresh(), false);
   }
 
   set date(dateString) {
@@ -59,36 +68,54 @@ class TimeManager extends LitElement {
   }
 
   async setWorkedHours() {
+    // set up
     const storedTimes = await getTimePairs('time-pairs-only');
     const nowDecimal = human2decimalTime();
-    let newWorkedHours = 0
-
-    storedTimes.forEach(([startTime, stopTime]) => {
-      if(startTime) {
-        const stopTimeIsNaN = isNaN(stopTime) || stopTime === undefined;
-
-        if(stopTimeIsNaN) {
-          //simulate endTime = now
-          stopTime = nowDecimal;
-        }
-
-        // do not count if given startTime is before now
-        if(startTime <= nowDecimal) {
-          newWorkedHours += stopTime - startTime;
-        }
+    let newWorkedHours = 0;
+    let lastStopTime = 0;
+    let pauses = 0;
+    // for all time-interval pairs:
+    storedTimes.forEach(([startTime, stopTime], i) => {
+      // valid start time?
+      if (isNaN(startTime) || startTime > nowDecimal) {
+        // no, so skip this time interval
+        return;
       }
-    });
+      // for first time interval only, ...
+      if (i === 0) {
+        // ... remember it as start-of-day
+        this.dayStart = startTime;
+        // ... and initialize pseudo last-stop-time
+        lastStopTime = startTime;
+      }
 
+      // ensure valid stop time
+      stopTime = isNaN(stopTime)
+        ? /* unfinished time interval */ nowDecimal
+        : stopTime;
+
+      // add time interval length to worked hours sofar
+      newWorkedHours += stopTime - startTime;
+
+      // calculate pause increment
+      pauses += startTime - lastStopTime;
+      // lag stop time
+      lastStopTime = stopTime;
+    });
+    // transfer to instance variables
     this.workedHours = newWorkedHours;
+    this.pauses = pauses;
   }
 
   setEndtime() {
-    dailyHours().then((hours) =>{
-      const hoursLeftDecimal = hours - this.workedHours;
-      const nowDecimal = human2decimalTime();
-
-      this.endTime = nowDecimal + hoursLeftDecimal;
-    } )
+    // get prescribed daily hours (from settings)
+    dailyHours().then(hours => {
+      // calculate end-of-work time
+      // N.B. Avoiding reference to current time ('now') in the calculation
+      // prevents wrong results in case of on-device clock skew
+      const { dayStart = 0, pauses = 0 } = this;
+      this.endTime = dayStart + hours + pauses;
+    });
   }
 
   refresh() {
@@ -110,11 +137,12 @@ class TimeManager extends LitElement {
         <p class="info">
           <span>
             <img src="icons/hourglass_bottom-24px.svg" />
-            ${ decimal2HoursMinutes(this.workedHours) }
+            ${decimal2HoursMinutes(this.workedHours)}
           </span>
           <span
-            ><img src="icons/directions_run-24px.svg" />
-            ${ decimal2HoursMinutes(this.endTime) }</span
+            ><img src="icons/directions_run-24px.svg" /> ${decimal2HoursMinutes(
+              this.endTime
+            )}</span
           >
         </p>
       </section>

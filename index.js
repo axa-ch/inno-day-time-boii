@@ -10,6 +10,7 @@ import './src/js/date-stepper.js';
 import './src/js/settings-dialog.js';
 import './src/js/time-list.js';
 import './src/js/time-manager.js';
+import customEvent from './src/js/custom-event.js';
 
 class TimeTracker extends LitElement {
   static get properties() {
@@ -69,6 +70,7 @@ class TimeTracker extends LitElement {
   render() {
     const {
       handleDateChange,
+      handleTimeListChange,
       handleStartStop,
       toggleSettings,
       date,
@@ -90,7 +92,7 @@ class TimeTracker extends LitElement {
       <article>
         <date-stepper @change=${handleDateChange}></date-stepper>
         <time-manager date=${date}></time-manager>
-        <time-list .date=${date} .startStop="${startStop}"></time-list>
+        <time-list .date=${date} .startStop="${startStop}" @change=${handleTimeListChange}></time-list>
         <checkin-toggle @change="${handleStartStop}"></checkin-toggle>
         <settings-dialog
           @close="${toggleSettings}"
@@ -100,14 +102,12 @@ class TimeTracker extends LitElement {
     `;
   }
 
-  _triggerTimeManagerRefresh() {
-    let tmpDate = new Date(this.date);
-    tmpDate.setSeconds(tmpDate.getSeconds() + 1); // TODO: this is a workaround to trigger rerender at time-manager component
-    this.date = tmpDate;
+  handleTimeListChange({target}) {
+    const timeManagerDomNode = target.previousElementSibling;
+    customEvent('refresh', null, timeManagerDomNode);
   }
 
   handleStartStop({ detail }) {
-    this._triggerTimeManagerRefresh();
     this.startStop = detail;
   }
 
