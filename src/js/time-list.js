@@ -159,19 +159,20 @@ class TimeList extends LitElement {
       const pauseStart = items[index][1];
       const pauseStop = items[nextIndex][0];
 
-      if (pauseStart && pauseStop) {
+      if (pauseStart !== undefined && pauseStop !== undefined) {
         const pause = pauseStop - pauseStart;
 
-        if (pause < 0) {
+        if (pause <= 0) {
           return;
         }
 
-        let text = `${Math.round(pause * 60)} min Pause`;
+        const { round, floor } = Math;
+        let text = `${round(pause * 60)} min Pause`;
 
         if (pause > 1) {
-          text = `${Math.floor(pause)
-            .toString()
-            .padStart(2, '0')} h ${Math.round(60 * (pause - Math.floor(pause)))
+          text = `${floor(pause).toString().padStart(2, '0')} h ${round(
+            60 * (pause - floor(pause))
+          )
             .toString()
             .padStart(2, '0')} min Pause`;
         }
