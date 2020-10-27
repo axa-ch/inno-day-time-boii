@@ -9,6 +9,7 @@ import {
   addTimeEvent,
   deleteTimePair,
   append,
+  last,
   setDate,
   COMING,
   GOING,
@@ -20,7 +21,6 @@ class TimeList extends LitElement {
     return {
       items: { type: Array },
       date: { type: Object },
-      startStop: { type: String },
     };
   }
 
@@ -33,6 +33,22 @@ class TimeList extends LitElement {
 
   get date() {
     return this._date;
+  }
+
+  set startStop(value) {
+    // filter out invalid values
+    if (!/^(?:start|stop)$/.test(value)) {
+      return;
+    }
+    const isStart = value === 'start';
+    // start: create a new time-pair row
+    // stop: fill second part of the last time-pair row
+    addTimeEvent(isStart ? COMING : GOING, isStart ? append : last).then(
+      // then: setters can't be async
+      updatedItems => {
+        this.items = updatedItems; // this triggers a re-render
+      }
+    );
   }
 
   static get styles() {
