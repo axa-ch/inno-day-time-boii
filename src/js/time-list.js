@@ -92,7 +92,7 @@ class TimeList extends LitElement {
       }
 
       .row span {
-        margin: 0 15px;
+        margin: 0 10px;
         font-weight: bold;
       }
 
