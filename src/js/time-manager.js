@@ -3,7 +3,7 @@ import {
   html,
   LitElement,
 } from 'https://unpkg.com/lit-element/lit-element.js?module';
-import {dailyHours, decimal2HoursMinutes, getTimePairs, setDate, timeToDecimal} from './date-manipulation.js';
+import {dailyHours, decimal2HoursMinutes, getTimePairs, timeToDecimal, human2decimalTime} from './date-manipulation.js';
 
 class TimeManager extends LitElement {
   static get properties() {
@@ -60,24 +60,26 @@ class TimeManager extends LitElement {
 
   async setWorkedHours() {
     const storedTimes = await getTimePairs('time-pairs-only');
-    const now = new Date();
-    const nowDecimal = timeToDecimal(now.getHours(), now.getMinutes());
-    this.workedHours = 0;
+    const nowDecimal = human2decimalTime();
+    let newWorkedHours = 0
 
-    storedTimes.forEach((value) => {
-      if(!isNaN(value[0])) {
-        let endTime;
+    storedTimes.forEach(([startTime, stopTime]) => {
+      if(startTime) {
+        const stopTimeIsNaN = isNaN(stopTime) || stopTime === undefined;
 
-        // no endTime is given and if given, the time is before now
-        if(isNaN(value[1]) && value[0] <= nowDecimal) {
+        if(stopTimeIsNaN) {
           //simulate endTime = now
-          endTime = nowDecimal;
-        } else {
-          endTime = value[1];
+          stopTime = nowDecimal;
         }
-        this.workedHours = this.workedHours + (endTime - value[0]);
+
+        // do not count if given startTime is before now
+        if(startTime <= nowDecimal) {
+          newWorkedHours += stopTime - startTime;
+        }
       }
     });
+
+    this.workedHours = newWorkedHours;
   }
 
   setEndtime() {
