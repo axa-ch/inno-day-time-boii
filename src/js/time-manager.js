@@ -50,11 +50,22 @@ class TimeManager extends LitElement {
 
   async setWorkedHours() {
     const storedTimes = await getTimePairs('time-pairs-only');
+    const now = new Date();
+    const nowDecimal = timeToDecimal(now.getHours(), now.getMinutes());
     this.workedHours = 0;
 
     storedTimes.forEach((value) => {
-      if(!isNaN(value[0]) && !isNaN(value[1])) {
-        this.workedHours = this.workedHours + (value[1] - value[0]);
+      if(!isNaN(value[0])) {
+        let endTime;
+
+        // no endTime is given and if given, the time is before now
+        if(isNaN(value[1]) && value[0] <= nowDecimal) {
+          //simulate endTime = now
+          endTime = nowDecimal;
+        } else {
+          endTime = value[1];
+        }
+        this.workedHours = this.workedHours + (endTime - value[0]);
       }
     });
   }
