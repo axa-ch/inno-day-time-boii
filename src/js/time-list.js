@@ -152,14 +152,31 @@ class TimeList extends LitElement {
     const calculatePause = (index) => {
       const nextIndex = index + 1;
 
-      if (nextIndex < items.length) {
-        const pauseStart = items[index][1];
-        const pauseStop = items[nextIndex][0];
+      if (nextIndex >= items.length) {
+        return;
+      }
 
-        if (pauseStart && pauseStop) {
-          const pause = Math.round((pauseStop - pauseStart) * 60);
-          return html`<li class="row pause">${pause} min Pause</li>`;
+      const pauseStart = items[index][1];
+      const pauseStop = items[nextIndex][0];
+
+      if (pauseStart && pauseStop) {
+        const pause = pauseStop - pauseStart;
+
+        if (pause < 0) {
+          return;
         }
+
+        let text = `${Math.round(pause * 60)} min Pause`;
+
+        if (pause > 1) {
+          text = `${Math.floor(pause)
+            .toString()
+            .padStart(2, '0')} h ${Math.round(60 * (pause - Math.floor(pause)))
+            .toString()
+            .padStart(2, '0')} min Pause`;
+        }
+
+        return html`<li class="row pause">${text}</li>`;
       }
     };
 
