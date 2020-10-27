@@ -41,10 +41,52 @@ export default class Persistence {
     return items;
   }
 
+  async getItemsFrom(date) {
+    const key = formatDateAsKey(date);
+    this.dateKey = key;
+    const items = await get(key);
+    return items;
+  }
+
+  async getTimeFromAllDays() {
+    const startOfLastYear = new Date(new Date().getFullYear() - 1, 0, 1);
+    const today = new Date();
+
+    const allTime = {
+      [new Date().getFullYear() - 1]: {},
+      [new Date().getFullYear()]: {},
+    };
+
+    let lastDate = startOfLastYear;
+    while (lastDate <= today) {
+      const itemsFromDay = await this.getItemsFrom(lastDate);
+      if (itemsFromDay) {
+        const totalWorkTimeForDay = itemsFromDay
+          .map(([start, end]) => end - start)
+          .reduce((timeRange1, timeRange2) => timeRange1 + timeRange2, 0);
+
+        if (!allTime[lastDate.getFullYear()])
+          allTime[lastDate.getFullYear()] = {};
+        if (!allTime[lastDate.getFullYear()][lastDate.getMonth()])
+          allTime[lastDate.getFullYear()][lastDate.getMonth()] = {};
+
+        allTime[lastDate.getFullYear()][lastDate.getMonth()][
+          lastDate.getDate()
+        ] = totalWorkTimeForDay;
+      }
+      lastDate = this.nextFrom(lastDate);
+    }
+    return allTime;
+  }
+
   next(offset = 1) {
     const { date } = this;
     this.date = date.setDate(date.getDate() + offset);
     return this.date;
+  }
+
+  nextFrom(date, offset = 1) {
+    return new Date(date.setDate(date.getDate() + offset));
   }
 
   previous() {

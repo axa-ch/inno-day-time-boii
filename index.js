@@ -4,6 +4,8 @@ import {
   html,
   LitElement,
 } from 'https://unpkg.com/lit-element/lit-element.js?module';
+import { timeSheet2Excel } from './src/js/excel-output.js';
+import Persistence from './src/js/persistence.js';
 
 import './src/js/checkin-toggle.js';
 import './src/js/date-stepper.js';
@@ -73,6 +75,7 @@ class TimeTracker extends LitElement {
       handleTimeListChange,
       handleStartStop,
       toggleSettings,
+      handleExcelExport,
       date,
       startStop = '',
       settingsVisible,
@@ -82,7 +85,7 @@ class TimeTracker extends LitElement {
       <header>
         <img src="icons/axaLogo.svg" alt="logo" />
         <h1>TimeTracker</h1>
-        <button>
+        <button @click=${handleExcelExport}>
           <img src="icons/save_alt-24px.svg" alt="exportieren" />
         </button>
         <button @click=${toggleSettings}>
@@ -107,12 +110,25 @@ class TimeTracker extends LitElement {
     customEvent('refresh', null, timeManagerDomNode);
   }
 
+  async handleExcelExport() {
+    console.log('works');
+    const a = new Persistence();
+    const items = await a.getTimeFromAllDays();
+
+    debugger;
+    // const excelData = {
+    //   header:[{/*colspan:2,*/ title:'world'}],
+    //   rows:[['bodyhello', 'bodyworld']]
+    // }
+    // timeSheet2Excel(excelData);
+  }
+
   handleStartStop({ detail }) {
     this.startStop = detail;
   }
 
   handleDateChange({ detail: { date } }) {
-      this.date = new Date(date);
+    this.date = new Date(date);
   }
 
   toggleSettings() {
