@@ -182,4 +182,6 @@ export {
   last,
   addTimeEvent,
   deleteTimePair,
+  timeToDecimal,
+  human2decimalTime
 };
