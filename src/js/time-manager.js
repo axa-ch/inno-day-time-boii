@@ -3,12 +3,13 @@ import {
   html,
   LitElement,
 } from 'https://unpkg.com/lit-element/lit-element.js?module';
-import {dailyHours, decimal2HoursMinutes, getTimePairs, timeToDecimal} from './date-manipulation.js';
+import {dailyHours, decimal2HoursMinutes, getTimePairs, setDate, timeToDecimal} from './date-manipulation.js';
 
 class TimeManager extends LitElement {
   static get properties() {
     return {
       date: { type: String },
+      //internal props:
       workedHours: { type: Number },
       endTime: { type: Number },
     };
@@ -46,6 +47,15 @@ class TimeManager extends LitElement {
     //init
     this.workedHours = 0;
     this.endTime = 0;
+  }
+
+  set date(dateString) {
+    this._date = dateString;
+    this.refresh();
+  }
+
+  get date() {
+    return this._date;
   }
 
   async setWorkedHours() {
