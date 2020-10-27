@@ -3,13 +3,14 @@ import {
   html,
   LitElement,
 } from 'https://unpkg.com/lit-element/lit-element.js?module';
-import { dailyHours } from './date-manipulation.js';
+import {dailyHours, decimal2HoursMinutes, getTimePairs, timeToDecimal} from './date-manipulation.js';
 
 class TimeManager extends LitElement {
   static get properties() {
     return {
       date: { type: String },
-      totalHours: { type: Number },
+      workedHours: { type: Number },
+      endTime: { type: Number },
     };
   }
 
@@ -42,22 +43,43 @@ class TimeManager extends LitElement {
   constructor() {
     super();
 
-    (async () => {
-      this.totalHours = await dailyHours();
-    })();
+    //init
+    this.workedHours = 0;
+    this.endTime = 0;
   }
 
-  getWorkedHours() {
-    return 0;
+  async setWorkedHours() {
+    const storedTimes = await getTimePairs('time-pairs-only');
+    this.workedHours = 0;
+
+    storedTimes.forEach((value) => {
+      if(!isNaN(value[0]) && !isNaN(value[1])) {
+        this.workedHours = this.workedHours + (value[1] - value[0]);
+      }
+    });
   }
 
-  getOvertime() {
-    return -1 * (this.totalHours - this.getWorkedHours());
+  setEndtime() {
+    dailyHours().then((hours) =>{
+      const now = new Date();
+      const hoursLeftDecimal = hours - this.workedHours;
+      const nowAsDecimal = timeToDecimal(now.getHours(), now.getMinutes())
+
+      this.endTime = nowAsDecimal + hoursLeftDecimal;
+    } )
   }
 
-  getEndtime() {
-    const { date, store } = this;
-    return '18:15'; //decimalTime2HoursMinutes(nowDecimal + this.getWorkedHours());
+  refresh() {
+    this.setWorkedHours();
+    this.setEndtime();
+  }
+
+  firstUpdated() {
+    this.refresh();
+
+    setInterval(() => {
+      this.refresh();
+    }, 29000); // refresh every half minute - 1 second
   }
 
   render() {
@@ -66,11 +88,11 @@ class TimeManager extends LitElement {
         <p class="info">
           <span>
             <img src="icons/hourglass_bottom-24px.svg" />
-            08:24
+            ${ decimal2HoursMinutes(this.workedHours) }
           </span>
           <span
             ><img src="icons/directions_run-24px.svg" />
-            ${this.getEndtime()}</span
+            ${ decimal2HoursMinutes(this.endTime) }</span
           >
         </p>
       </section>
