@@ -100,7 +100,14 @@ class TimeTracker extends LitElement {
     `;
   }
 
+  _triggerTimeManagerRefresh() {
+    let tmpDate = new Date(this.date);
+    tmpDate.setSeconds(tmpDate.getSeconds() + 1);
+    this.date = tmpDate;
+  }
+
   handleStartStop({ detail }) {
+    this._triggerTimeManagerRefresh();
     this.startStop = detail;
   }
 
