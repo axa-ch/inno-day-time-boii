@@ -48,22 +48,15 @@ class CheckinToggle extends LitElement {
 
       button[disabled] {
         cursor: unset;
+        opacity: 0.2;
       }
 
       .start {
-        background: #1cc54e;
-      }
-
-      .start[disabled] {
-        background: #9fd9b4;
+        background: #1a0082;
       }
 
       .stop {
-        background: #c91432;
-      }
-
-      .stop[disabled] {
-        background: #e196aa;
+        background: #f9205c;
       }
     `;
   }
