@@ -3,6 +3,7 @@ import { timeSheet2Excel } from './excel-output.js';
 
 const persistence = new Persistence();
 
+// This is just an example. I needed a "type" to understand what to do with this.
 const datamodel = {
   header: [{ colspan: 1, title: 'world' }],
   rows: [['Day', 'Month'], [], []],
@@ -16,16 +17,6 @@ export const exportToExcel = async () => {
     rows: [],
   };
 
-  let rowIndex = 0;
-  //   let yearSpan1 = 1;
-  //   let yearSpan2 = 1;
-
-  //   let yearSpans = [];
-
-  //   Object.entries(items).forEach(([year, months]) => {
-  //     items[year].yearHeaderSpan = Object.keys(months).length
-  //   });
-
   let monthOffset = 0;
   Object.entries(items).map(([year, months], yearIndex) => {
     if (months && Object.keys(months).length) {
@@ -38,6 +29,7 @@ export const exportToExcel = async () => {
           for (let d = 0; d < 31; ++d) {
             if (days[String(d)]) {
               // Time entry was found for this day
+              // TODO BUGFIX @raphaellueckl: It could be that monthIndex is always 0. Investigate on the next inno day!
               excelData.rows[monthIndex + monthOffset][d] = days[String(d)];
             } else {
               // No time entry for this day
