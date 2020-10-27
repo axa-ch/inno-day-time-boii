@@ -51,6 +51,5 @@ export const timeSheet2Excel = (timeSheet) => {
   table = table.concat(rows.map(row));
   table.push(EPILOGUE);
 
-  // excelExport(null, 'AXA TimeTracker Export', table.join(''));
   excelExport(table.join(''), 'AXA TimeTracker Export');
 };

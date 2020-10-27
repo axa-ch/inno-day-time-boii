@@ -52,7 +52,7 @@ export default class Persistence {
     const startOfLastYear = new Date(new Date().getFullYear() - 1, 0, 1);
     const today = new Date();
 
-    const allTime = {
+    const timeFromLastYearToNow = {
       [new Date().getFullYear() - 1]: {},
       [new Date().getFullYear()]: {},
     };
@@ -65,18 +65,20 @@ export default class Persistence {
           .map(([start, end]) => end - start)
           .reduce((timeRange1, timeRange2) => timeRange1 + timeRange2, 0);
 
-        if (!allTime[lastDate.getFullYear()])
-          allTime[lastDate.getFullYear()] = {};
-        if (!allTime[lastDate.getFullYear()][lastDate.getMonth()])
-          allTime[lastDate.getFullYear()][lastDate.getMonth()] = {};
+        if (!timeFromLastYearToNow[lastDate.getFullYear()])
+          timeFromLastYearToNow[lastDate.getFullYear()] = {};
+        if (!timeFromLastYearToNow[lastDate.getFullYear()][lastDate.getMonth()])
+          timeFromLastYearToNow[lastDate.getFullYear()][
+            lastDate.getMonth()
+          ] = {};
 
-        allTime[lastDate.getFullYear()][lastDate.getMonth()][
+        timeFromLastYearToNow[lastDate.getFullYear()][lastDate.getMonth()][
           lastDate.getDate()
         ] = totalWorkTimeForDay;
       }
       lastDate = this.nextFrom(lastDate);
     }
-    return allTime;
+    return timeFromLastYearToNow;
   }
 
   next(offset = 1) {
