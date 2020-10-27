@@ -84,11 +84,10 @@ class TimeManager extends LitElement {
 
   setEndtime() {
     dailyHours().then((hours) =>{
-      const now = new Date();
       const hoursLeftDecimal = hours - this.workedHours;
-      const nowAsDecimal = timeToDecimal(now.getHours(), now.getMinutes())
+      const nowDecimal = human2decimalTime();
 
-      this.endTime = nowAsDecimal + hoursLeftDecimal;
+      this.endTime = nowDecimal + hoursLeftDecimal;
     } )
   }
 
