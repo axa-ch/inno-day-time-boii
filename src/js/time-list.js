@@ -4,16 +4,16 @@ import {
   LitElement,
 } from 'https://unpkg.com/lit-element/lit-element.js?module';
 import {
-  decimal2HoursMinutes,
-  getTimePairs,
   addTimeEvent,
-  deleteTimePair,
   append,
+  COMING,
+  decimal2HoursMinutes,
+  deleteTimePair,
+  EMPTY,
+  getTimePairs,
+  GOING,
   last,
   setDate,
-  COMING,
-  GOING,
-  EMPTY,
 } from './date-manipulation.js';
 
 class TimeList extends LitElement {
@@ -26,6 +26,7 @@ class TimeList extends LitElement {
 
   set date(aDate) {
     this._date = setDate(aDate);
+
     (async () => {
       this.items = await getTimePairs('time-pairs-only');
     })();
@@ -45,7 +46,7 @@ class TimeList extends LitElement {
     // stop: fill second part of the last time-pair row
     addTimeEvent(isStart ? COMING : GOING, isStart ? append : last).then(
       // then: setters can't be async
-      updatedItems => {
+      (updatedItems) => {
         this.items = updatedItems; // this triggers a re-render
       }
     );
@@ -71,7 +72,7 @@ class TimeList extends LitElement {
 
       ol {
         margin: 20px 0 0;
-        padding: 10px;
+        padding: 5px;
         background: #f2f2f2;
         border-radius: 2px;
       }
@@ -91,12 +92,18 @@ class TimeList extends LitElement {
       }
 
       .row span {
-        margin: 0 20px;
+        margin: 0 10px;
         font-weight: bold;
       }
 
+      .pause {
+        padding: 10px;
+        justify-content: center;
+        font-size: 14px;
+      }
+
       .delete {
-        margin-left: 15px;
+        margin-left: 5px;
         padding: 0;
         border: none;
         background: none;
@@ -111,7 +118,7 @@ class TimeList extends LitElement {
       .rowplus {
         display: flex;
         justify-content: center;
-        padding: 10px;
+        padding: 10px 10px 15px;
       }
 
       .add {
@@ -125,6 +132,7 @@ class TimeList extends LitElement {
       }
 
       .add img {
+        width: 25px;
         vertical-align: middle;
       }
     `;
@@ -132,6 +140,7 @@ class TimeList extends LitElement {
 
   constructor() {
     super();
+
     (async () => {
       this.items = await getTimePairs('time-pairs-only');
     })();
@@ -140,12 +149,42 @@ class TimeList extends LitElement {
   render() {
     const { items = [], handleRowAction, handleAdd } = this;
 
+    const calculatePause = (index) => {
+      const nextIndex = index + 1;
+
+      if (nextIndex >= items.length) {
+        return;
+      }
+
+      const pauseStart = items[index][1];
+      const pauseStop = items[nextIndex][0];
+
+      if (pauseStart !== undefined && pauseStop !== undefined) {
+        const pause = pauseStop - pauseStart;
+
+        if (pause <= 0) {
+          return;
+        }
+
+        const { round, floor } = Math;
+        let text = `${round(pause * 60)} min Pause`;
+
+        if (pause > 1) {
+          text = `${floor(pause).toString().padStart(2, '0')} h ${round(
+            60 * (pause - floor(pause))
+          )
+            .toString()
+            .padStart(2, '0')} min Pause`;
+        }
+
+        return html`<li class="row pause">${text}</li>`;
+      }
+    };
+
     return html`
       <section>
         <details open>
-          <summary>
-            Eingetragene Zeiten
-          </summary>
+          <summary>Eingetragene Zeiten</summary>
           <ol>
             ${items.map(
               ([start, stop], index) => html`
@@ -169,6 +208,7 @@ class TimeList extends LitElement {
                     <img class="delete" src="icons/delete-24px.svg" />
                   </button>
                 </li>
+                ${calculatePause(index)}
               `
             )}
             <li class="rowplus">
@@ -185,6 +225,7 @@ class TimeList extends LitElement {
   async handleRowAction({ target }) {
     const rowIndex = target.parentNode.dataset.index;
     const { value, className } = target;
+
     switch (className) {
       case 'start':
         this.items = await addTimeEvent(COMING, rowIndex, value);
