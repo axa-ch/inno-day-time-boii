@@ -193,6 +193,7 @@ class TimeList extends LitElement {
               ([start, stop], index) => html`
                 <li class="row" data-index="${index}">
                   <input
+                    autofocus
                     class="start"
                     type="time"
                     .value="${decimal2HoursMinutes(start)}"
@@ -249,6 +250,11 @@ class TimeList extends LitElement {
 
   async handleAdd() {
     this.items = await addTimeEvent(EMPTY, append);
+
+    setTimeout(() => {
+      console.log(this.shadowRoot.querySelector(".start"))
+      this.shadowRoot.querySelector(".start").focus();
+    },1);
   }
 }
 
