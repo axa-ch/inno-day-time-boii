@@ -93,7 +93,7 @@ class TimeTracker extends LitElement {
         <date-stepper @change=${handleDateChange}></date-stepper>
         <time-manager date=${date}></time-manager>
         <time-list .date=${date} .startStop="${startStop}" @change=${handleTimeListChange}></time-list>
-        <checkin-toggle @change="${handleStartStop}"></checkin-toggle>
+        <checkin-toggle @change="${handleStartStop}" date=${date}></checkin-toggle>
         <settings-dialog
           @close="${toggleSettings}"
           .open="${settingsVisible}"
