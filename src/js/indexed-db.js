@@ -60,6 +60,15 @@ export function get(key, store = getDefaultStore()) {
     .then(() => req.result);
 }
 
+// export function getAll(store = getDefaultStore()) {
+//   let req;
+//   return store
+//     ._withIDBStore('readonly', (store) => {
+//       req = store.getAll();
+//     })
+//     .then(() => req.result);
+// }
+
 export function set(key, value, store = getDefaultStore()) {
   return store._withIDBStore('readwrite', (store) => {
     store.put(value, key);

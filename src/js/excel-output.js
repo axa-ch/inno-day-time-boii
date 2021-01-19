@@ -27,6 +27,11 @@ const excelExport = (table, worksheet = 'Worksheet') => {
     'data:application/vnd.ms-excel;base64,' + base64(TEMPLATE);
 };
 
+const datamodel = {
+  header: [{ colspan: 2, title: 'world' }],
+  rows: [['bodyhello', 'bodyworld']],
+};
+
 export const timeSheet2Excel = (timeSheet) => {
   const { header = [], rows = [] } = timeSheet;
 
@@ -38,7 +43,7 @@ export const timeSheet2Excel = (timeSheet) => {
 
   const EPILOGUE = '</tbody>';
 
-  const table = [PROLOGUE(header)];
+  let table = [PROLOGUE(header)];
 
   const cell = (aCell = '') => `<td>${aCell}</td>`;
   const row = (cells = []) => `<tr>${cells.map(cell)}</tr>`;
@@ -46,5 +51,27 @@ export const timeSheet2Excel = (timeSheet) => {
   table = table.concat(rows.map(row));
   table.push(EPILOGUE);
 
-  excelExport(null, 'AXA TimeTracker Export', table.join(''));
+  excelExport(table.join(''), 'AXA TimeTracker Export');
+};
+
+export const timeSheet2ExcelColumns = (timeSheet) => {
+  const { header = [], rows = [] } = timeSheet;
+
+  const columnHeader = ({ colspan, title = '' }) =>
+    `<tr><th${colspan ? ' colspan="' + colspan + '"' : ''}>${title}</th></tr>`;
+
+  const PROLOGUE = (columnHeaders) =>
+    `<thead>${columnHeaders.map(columnHeader)}</thead><tbody>`;
+
+  const EPILOGUE = '</tbody>';
+
+  let table = [PROLOGUE(header)];
+
+  const cell = (aCell = '') => `<td>${aCell}</td>`;
+  const row = (cells = []) => `<tr>${cells.map(cell)}</tr>`;
+
+  table = table.concat(rows.map(row));
+  table.push(EPILOGUE);
+
+  excelExport(table.join(''), 'AXA TimeTracker Export');
 };

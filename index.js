@@ -5,6 +5,8 @@ import {
   LitElement,
 } from 'https://unpkg.com/lit-element/lit-element.js?module';
 
+import { exportToExcel } from './src/js/export-util.js';
+
 import './src/js/checkin-toggle.js';
 import './src/js/date-stepper.js';
 import './src/js/settings-dialog.js';
@@ -82,7 +84,7 @@ class TimeTracker extends LitElement {
       <header>
         <img src="icons/axaLogo.svg" alt="logo" />
         <h1>TimeTracker</h1>
-        <button>
+        <button @click=${exportToExcel}>
           <img src="icons/save_alt-24px.svg" alt="exportieren" />
         </button>
         <button @click=${toggleSettings}>
@@ -112,7 +114,7 @@ class TimeTracker extends LitElement {
   }
 
   handleDateChange({ detail: { date } }) {
-      this.date = new Date(date);
+    this.date = new Date(date);
   }
 
   toggleSettings() {
