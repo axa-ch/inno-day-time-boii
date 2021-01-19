@@ -15,6 +15,7 @@ import {
   last,
   setDate,
 } from './date-manipulation.js';
+import customEvent from './custom-event.js';
 
 class TimeList extends LitElement {
   static get properties() {
@@ -46,7 +47,7 @@ class TimeList extends LitElement {
     // stop: fill second part of the last time-pair row
     addTimeEvent(isStart ? COMING : GOING, isStart ? append : last).then(
       // then: setters can't be async
-      (updatedItems) => {
+      updatedItems => {
         this.items = updatedItems; // this triggers a re-render
       }
     );
@@ -149,7 +150,7 @@ class TimeList extends LitElement {
   render() {
     const { items = [], handleRowAction, handleAdd } = this;
 
-    const calculatePause = (index) => {
+    const calculatePause = index => {
       const nextIndex = index + 1;
 
       if (nextIndex >= items.length) {
@@ -170,14 +171,16 @@ class TimeList extends LitElement {
         let text = `${round(pause * 60)} min Pause`;
 
         if (pause > 1) {
-          text = `${floor(pause).toString().padStart(2, '0')} h ${round(
-            60 * (pause - floor(pause))
-          )
+          text = `${floor(pause)
+            .toString()
+            .padStart(2, '0')} h ${round(60 * (pause - floor(pause)))
             .toString()
             .padStart(2, '0')} min Pause`;
         }
 
-        return html`<li class="row pause">${text}</li>`;
+        return html`
+          <li class="row pause">${text}</li>
+        `;
       }
     };
 
@@ -220,6 +223,11 @@ class TimeList extends LitElement {
         </details>
       </section>
     `;
+  }
+
+  updated() {
+    // let others know we re-rendered
+    customEvent('change', null, this);
   }
 
   async handleRowAction({ target }) {
