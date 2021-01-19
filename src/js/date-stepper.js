@@ -24,7 +24,7 @@ class DateStepper extends LitElement {
   }
 
   set value(val) {
-    const oldVal = this._prop;
+    const oldVal = this._value;
     this._value = val;
     this.requestUpdate('value', oldVal);
     this.setHelpText();
