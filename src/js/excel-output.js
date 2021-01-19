@@ -53,3 +53,25 @@ export const timeSheet2Excel = (timeSheet) => {
 
   excelExport(table.join(''), 'AXA TimeTracker Export');
 };
+
+export const timeSheet2ExcelColumns = (timeSheet) => {
+  const { header = [], rows = [] } = timeSheet;
+
+  const columnHeader = ({ colspan, title = '' }) =>
+    `<tr><th${colspan ? ' colspan="' + colspan + '"' : ''}>${title}</th></tr>`;
+
+  const PROLOGUE = (columnHeaders) =>
+    `<thead>${columnHeaders.map(columnHeader)}</thead><tbody>`;
+
+  const EPILOGUE = '</tbody>';
+
+  let table = [PROLOGUE(header)];
+
+  const cell = (aCell = '') => `<td>${aCell}</td>`;
+  const row = (cells = []) => `<tr>${cells.map(cell)}</tr>`;
+
+  table = table.concat(rows.map(row));
+  table.push(EPILOGUE);
+
+  excelExport(table.join(''), 'AXA TimeTracker Export');
+};

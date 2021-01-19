@@ -18,14 +18,19 @@ export const exportToExcel = async () => {
   };
 
   let monthOffset = 0;
+  // ## Map over years
   Object.entries(items).map(([year, months], yearIndex) => {
+    debugger;
     if (months && Object.keys(months).length) {
       //   excelData.header.push({
       //     colspan: Object.keys(months).length,
       //     title: `${year}`,
       //   });
+      // ## Map over months
       Object.entries(months).map(([month, days], monthIndex) => {
+        debugger;
         if (days) {
+          // ## Map over days
           for (let d = 0; d < 31; ++d) {
             if (days[String(d)]) {
               // Time entry was found for this day
