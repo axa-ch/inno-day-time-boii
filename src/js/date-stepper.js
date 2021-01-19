@@ -8,9 +8,6 @@ import {
   nextDay,
   previousDay,
   sameDay,
-  today,
-  yesterday,
-  tomorrow,
   getDate,
   setDate,
   formatDate,
@@ -22,8 +19,18 @@ class DateStepper extends LitElement {
   static get properties() {
     return {
       value: { type: String, reflect: true },
+      _dateText: {type: String}
     };
   }
+
+  set value(val) {
+    const oldVal = this._prop;
+    this._value = val;
+    this.requestUpdate('value', oldVal);
+    this.setHelpText();
+  }
+
+  get value() { return this._value; }
 
   constructor() {
     super();
@@ -86,8 +93,10 @@ class DateStepper extends LitElement {
   }
 
   render() {
-    const helpText = this.getHelpText()
-      ? html` <p class="helpText">${this.getHelpText()}</p> `
+    const {_dateText, date} = this;
+
+    const helpText = _dateText
+      ? html` <p class="helpText">${_dateText}</p> `
       : '';
 
     return html`
@@ -101,7 +110,7 @@ class DateStepper extends LitElement {
         </button>
         <div class="date-wrapper">
           ${helpText}
-          <p class="date">${formatDate()}</p>
+          <p class="date">${formatDate(date)}</p>
         </div>
         <button @click="${this.navigate}">
           <img src="icons/keyboard_arrow_right-24px.svg" alt="weiter" />
@@ -113,6 +122,12 @@ class DateStepper extends LitElement {
   // fire the initial date so that the other components know
   firstUpdated() {
     fireEvent('change', { date: this.date }, this);
+
+    this.setHelpText();
+
+    setInterval(() => {
+      this.setHelpText();
+    }, 29000); // refresh every half minute - 1 second
   }
 
   navigate({ target }) {
@@ -127,20 +142,23 @@ class DateStepper extends LitElement {
     fireEvent('change', { date: this.date }, this);
   }
 
-  getHelpText() {
-    if (sameDay(today)) {
-      return 'Heute';
-    }
+  setHelpText() {
+    let {date} = this;
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
 
-    if (sameDay(yesterday)) {
-      return 'Gestern';
+    if (sameDay(today, date)) {
+      this._dateText = 'Heute';
+    } else if (sameDay(yesterday, date)) {
+      this._dateText = 'Gestern';
+    } else if (sameDay(tomorrow, date)) {
+      this._dateText = 'Morgen';
+    } else {
+      this._dateText = '';
     }
-
-    if (sameDay(tomorrow)) {
-      return 'Morgen';
-    }
-
-    return;
   }
 }
 
