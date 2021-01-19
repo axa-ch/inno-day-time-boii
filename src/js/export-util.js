@@ -9,6 +9,21 @@ const datamodel = {
   rows: [['Day', 'Month'], [], []],
 };
 
+const monthLabels = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
 export const exportToExcel = async () => {
   const items = await persistence.getTimeFromAllDays();
 
@@ -28,7 +43,6 @@ export const exportToExcel = async () => {
       //   });
       // ## Map over months
       Object.entries(months).map(([month, days], monthIndex) => {
-        debugger;
         if (days) {
           // ## Map over days
           for (let d = 0; d < 31; ++d) {
@@ -43,15 +57,35 @@ export const exportToExcel = async () => {
                 : (excelData.rows[monthIndex + monthOffset] = []))[d] = '0';
             }
           }
-          excelData.rows[monthIndex + monthOffset][32] = month; // Write current month for reference
-          excelData.rows[monthIndex + monthOffset][33] = year; // Write current year for reference
+          excelData.rows[monthIndex + monthOffset][31] = monthLabels[month]; // Write current month for reference
+          excelData.rows[monthIndex + monthOffset][32] = year; // Write current year for reference
         }
       });
       monthOffset = Object.keys(months).length;
     }
   });
 
-  debugger;
+  const warpedRows = (data) => {
+    let rows = [];
+
+    // 34 = 31 days + month label + year label
+    for (let i = 0; i < 33; ++i) {
+      data.rows.forEach((r) => {
+        if (!rows[i]) rows[i] = [];
+        rows[i].push(r[i]);
+      });
+    }
+    // Ignore the first index
+    rows[0].unshift('');
+    for (let i = 1; i < 32; ++i) {
+      rows[i].unshift(i);
+    }
+
+    data.rows = rows;
+    return data;
+  };
+
+  const warpedData = warpedRows(excelData);
 
   timeSheet2Excel(excelData);
 };
