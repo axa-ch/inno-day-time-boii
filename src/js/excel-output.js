@@ -1,3 +1,5 @@
+import { saveAsFile } from './import-export.js';
+
 const excelExport = (table, worksheet = 'Worksheet') => {
   const TEMPLATE = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
         <head>
@@ -21,57 +23,31 @@ const excelExport = (table, worksheet = 'Worksheet') => {
         </body>
     </html>`;
 
-  const base64 = (string) => window.btoa(unescape(encodeURIComponent(string)));
+  const fileName = `AXA-Time-Tracker-Excel-Export-${new Date().toISOString()}.xls`;
 
-  window.location.href =
-    'data:application/vnd.ms-excel;base64,' + base64(TEMPLATE);
+  return saveAsFile(fileName, TEMPLATE, 'application/vnd.ms-excel');
 };
 
-const datamodel = {
-  header: [{ colspan: 2, title: 'world' }],
-  rows: [['bodyhello', 'bodyworld']],
-};
-
-export const timeSheet2Excel = (timeSheet) => {
+export const timeSheet2Excel = timeSheet => {
   const { header = [], rows = [] } = timeSheet;
 
   const columnHeader = ({ colspan, title = '' }) =>
-    `<tr><th${colspan ? ' colspan="' + colspan + '"' : ''}>${title}</th></tr>`;
+    `<th${colspan ? ' colspan="' + colspan + '"' : ''}>${title}</th>`;
 
-  const PROLOGUE = (columnHeaders) =>
-    `<thead>${columnHeaders.map(columnHeader)}</thead><tbody>`;
+  const PROLOGUE = columnHeaders =>
+    `<thead><tr>${columnHeaders
+      .map(columnHeader)
+      .join('')}</tr></thead><tbody>`;
 
   const EPILOGUE = '</tbody>';
 
   let table = [PROLOGUE(header)];
 
   const cell = (aCell = '') => `<td>${aCell}</td>`;
-  const row = (cells = []) => `<tr>${cells.map(cell)}</tr>`;
+  const row = (cells = []) => `<tr>${cells.map(cell).join('')}</tr>`;
 
   table = table.concat(rows.map(row));
   table.push(EPILOGUE);
 
-  excelExport(table.join(''), 'AXA TimeTracker Export');
-};
-
-export const timeSheet2ExcelColumns = (timeSheet) => {
-  const { header = [], rows = [] } = timeSheet;
-
-  const columnHeader = ({ colspan, title = '' }) =>
-    `<tr><th${colspan ? ' colspan="' + colspan + '"' : ''}>${title}</th></tr>`;
-
-  const PROLOGUE = (columnHeaders) =>
-    `<thead>${columnHeaders.map(columnHeader)}</thead><tbody>`;
-
-  const EPILOGUE = '</tbody>';
-
-  let table = [PROLOGUE(header)];
-
-  const cell = (aCell = '') => `<td>${aCell}</td>`;
-  const row = (cells = []) => `<tr>${cells.map(cell)}</tr>`;
-
-  table = table.concat(rows.map(row));
-  table.push(EPILOGUE);
-
-  excelExport(table.join(''), 'AXA TimeTracker Export');
+  return excelExport(table.join(''), 'AXA Time Tracker Export');
 };
