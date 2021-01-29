@@ -96,4 +96,4 @@ const importFromJSONFile = async event => {
   }
 };
 
-export { exportToJSONFile, importFromJSONFile, eventTarget };
+export { exportToJSONFile, importFromJSONFile, eventTarget, saveAsFile };

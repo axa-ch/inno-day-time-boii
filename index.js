@@ -5,7 +5,7 @@ import {
   LitElement,
 } from 'https://unpkg.com/lit-element/lit-element.js?module';
 
-import { exportToExcel } from './src/js/export-util.js';
+import { export2Excel } from './src/js/export-util.js';
 
 import './src/js/checkin-toggle.js';
 import './src/js/date-stepper.js';
@@ -84,7 +84,7 @@ class TimeTracker extends LitElement {
       <header>
         <img src="icons/axaLogo.svg" alt="logo" />
         <h1>TimeTracker</h1>
-        <button @click=${exportToExcel}>
+        <button @click=${export2Excel()}>
           <img src="icons/save_alt-24px.svg" alt="exportieren" />
         </button>
         <button @click=${toggleSettings}>
@@ -94,8 +94,15 @@ class TimeTracker extends LitElement {
       <article>
         <date-stepper @change=${handleDateChange}></date-stepper>
         <time-manager date=${date}></time-manager>
-        <time-list .date=${date} .startStop="${startStop}" @change=${handleTimeListChange}></time-list>
-        <checkin-toggle @change="${handleStartStop}" date=${date}></checkin-toggle>
+        <time-list
+          .date=${date}
+          .startStop="${startStop}"
+          @change=${handleTimeListChange}
+        ></time-list>
+        <checkin-toggle
+          @change="${handleStartStop}"
+          date=${date}
+        ></checkin-toggle>
         <settings-dialog
           @close="${toggleSettings}"
           .open="${settingsVisible}"
@@ -104,7 +111,7 @@ class TimeTracker extends LitElement {
     `;
   }
 
-  handleTimeListChange({target}) {
+  handleTimeListChange({ target }) {
     const timeManagerDomNode = target.previousElementSibling;
     customEvent('refresh', null, timeManagerDomNode);
   }

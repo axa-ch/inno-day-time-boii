@@ -27,14 +27,18 @@ let date = new Date();
 let numTimePairs = 0;
 
 // helper functions
-const formatDateAsKey = (date) =>
-  `${date.getFullYear()}-0${date.getMonth()}-0${date.getDate()}`;
+const formatDateAsKey = (
+  date,
+  year = date.getFullYear(),
+  month = date.getMonth(),
+  day = date.getDate()
+) => `${year}-0${month}-0${day}`;
 
 const timeToDecimal = (hours, minutes) =>
   parseInt(hours, 10) + parseInt(minutes, 10) / 60; // hours in 24h format
 
 // time format: hh:mm, 24-hour time
-const human2decimalTime = (humanReadableTime) => {
+const human2decimalTime = humanReadableTime => {
   let time = humanReadableTime;
   if (humanReadableTime === undefined) {
     const now = new Date();
@@ -52,15 +56,15 @@ const human2decimalTime = (humanReadableTime) => {
 };
 
 // API functions
-const decimal2HoursMinutes = (decimal) =>
-  `${Math.floor(decimal).toString().padStart(2, '0')}:${Math.round(
-    60 * (decimal - Math.floor(decimal))
-  )
+const decimal2HoursMinutes = decimal =>
+  `${Math.floor(decimal)
+    .toString()
+    .padStart(2, '0')}:${Math.round(60 * (decimal - Math.floor(decimal)))
     .toString()
     .padStart(2, '0')}`;
 
-const getTimePairs = async (noKey) => {
-  const key = formatDateAsKey(date);
+const getTimePairs = async (noKey, year, month, day) => {
+  const key = formatDateAsKey(date, year, month, day);
   const timePairs = (await get(key)) || [];
   numTimePairs = timePairs.length;
   return noKey ? timePairs : { timePairs, key };
@@ -82,7 +86,7 @@ const sameDay = (d1, d2 = date) =>
 
 const getDate = () => date;
 
-const setDate = (newDate) => {
+const setDate = newDate => {
   if (!newDate) return;
   date = new Date(newDate);
   return getDate();
@@ -96,7 +100,7 @@ const formatDate = (aDate = date) =>
     day: 'numeric',
   });
 
-const dailyHours = async (hours) => {
+const dailyHours = async hours => {
   // fetch persisted daily goal (in decimal hours, e.g. 8.4)
   let storedHours = (await get(DAILY_KEY)) || DEFAULT_DAILY;
   // caller just wants to *get* stored hours?
@@ -109,7 +113,7 @@ const dailyHours = async (hours) => {
   return hours;
 };
 
-const yearlyHours = async (deltaHours) => {
+const yearlyHours = async deltaHours => {
   const storedAccumulatedHours = (await get(ACCUMULATED_HOURS_KEY)) || 0.0;
   // get
   if (deltaHours === undefined) {
@@ -150,7 +154,7 @@ const addTimeEvent = async (which, where, humanReadableTime) => {
   return timePairs;
 };
 
-const deleteTimePair = async (where) => {
+const deleteTimePair = async where => {
   // get timePairs
   const { timePairs, key } = await getTimePairs();
   // remove the item under where
@@ -175,6 +179,7 @@ export {
   getDate,
   setDate,
   formatDate,
+  formatDateAsKey,
   decimal2HoursMinutes,
   dailyHours,
   yearlyHours,
@@ -183,5 +188,5 @@ export {
   addTimeEvent,
   deleteTimePair,
   timeToDecimal,
-  human2decimalTime
+  human2decimalTime,
 };

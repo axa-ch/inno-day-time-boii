@@ -7,7 +7,6 @@ import {
   dailyHours,
   decimal2HoursMinutes,
   getTimePairs,
-  timeToDecimal,
   human2decimalTime,
 } from './date-manipulation.js';
 
