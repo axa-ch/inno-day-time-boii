@@ -2400,14 +2400,9 @@ var create_qrcode = function (
   //  return qr.createImgTag();
 };
 
-var update_qrcode = function () {
-  text = JSON.stringify({
-    type: 'offer',
-    sdp:
-      'v=0\r\no=- 2510500509119976170 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=group:BUNDLE 0\r\na=msid-semantic: WMS\r\nm=application 52828 UDP/DTLS/SCTP webrtc-datachannel\r\nc=IN IP4 0.0.0.0\r\na=candidate:2210265325 1 udp 2113937151 e7624672-e77c-4900-91ad-8d10f78fca7c.local 52828 typ host generation 0 network-cost 999\r\na=candidate:842163049 1 udp 1677729535 217.22.129.80 52828 typ srflx raddr 0.0.0.0 rport 0 generation 0 network-cost 999\r\na=ice-ufrag:8XnH\r\na=ice-pwd:E4o9Et0oe+0YxdDjzh45lH6a\r\na=ice-options:trickle\r\na=fingerprint:sha-256 34:CF:8C:85:4A:06:0E:EF:9D:30:14:A8:08:E4:93:10:6F:70:BB:15:0E:E1:97:A6:0E:3F:15:32:32:6B:5C:1E\r\na=setup:actpass\r\na=mid:0\r\na=sctp-port:5000\r\na=max-message-size:262144\r\n',
-  });
+var update_qrcode = function (qrData) {
   document.getElementById('qr').innerHTML = create_qrcode(
-    text,
+    qrData,
     '0',
     'L',
     'Byte',
