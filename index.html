@@ -3,11 +3,25 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=Utf-8" />
     <script src="qrcode.js"></script>
+    <script src="qr-scanner.js"></script>
+    <script src="qr-scanner-worker.js"></script>
 
     <title>P2P Communication</title>
   </head>
   <body>
-    <!-- QR Code Element -->
+    <video></video>
+    <script type="module">
+      import QrScanner from './qr-scanner.js';
+      const qrScanner = new QrScanner(
+        document.querySelector('video'),
+        (result) => {
+          console.log('decoded qr code:', result);
+          qrScanner.stop();
+        }
+      );
+      qrScanner.start();
+    </script>
+    QR Code Element
     <div id="qr"></div>
     <!-- / QR Code Element -->
 
