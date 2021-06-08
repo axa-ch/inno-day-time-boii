@@ -9,7 +9,7 @@
     <title>P2P Communication</title>
   </head>
   <body>
-    <video></video>
+    <video width="300" height="170"></video>
     <script type="module">
       import QrScanner from './qr-scanner.js';
       const qrScanner = new QrScanner(
@@ -19,13 +19,83 @@
           qrScanner.stop();
         }
       );
-      qrScanner.start();
+      //   qrScanner.start();
     </script>
+
+    <table width="100%" border="1">
+      <tbody>
+        <tr>
+          <th>#</th>
+          <th>initiator</th>
+          <th>peer</th>
+        </tr>
+        <tr>
+          <td>step 1</td>
+          <td>
+            <input type="button" value="create offer" id="create-offer" />
+            <input id="createdOffer" type="text" hidden="" />
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>step 2</td>
+          <td></td>
+          <td>
+            <input
+              id="remoteOffer"
+              type="text"
+              placeholder="offer from initiator"
+            />
+            <input type="button" value="accept offer" id="accept-offer" />
+          </td>
+        </tr>
+        <tr>
+          <td>step 3</td>
+          <td></td>
+          <td>
+            <input type="button" value="create answer" id="create-answer" />
+            <input id="createdAnswer" type="text" />
+          </td>
+        </tr>
+        <tr>
+          <td>step 4</td>
+          <td>
+            <input
+              id="remoteAnswer"
+              type="text"
+              placeholder="answer from peer"
+            />
+            <input type="button" value="accept answer" id="accept-answer" />
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <hr />
+    <input id="text" type="text" />
+    <input type="button" value="send" id="send-text" />
+    <hr />
+    <table border="1">
+      <tbody>
+        <tr>
+          <th colspan="2">connection</th>
+        </tr>
+        <tr>
+          <th>connectionState</th>
+          <td id="connectionState">connected</td>
+        </tr>
+        <tr>
+          <th>iceConnectionState</th>
+          <td id="iceConnectionState">connected</td>
+        </tr>
+      </tbody>
+    </table>
+
     QR Code Element
     <div id="qr"></div>
     <!-- / QR Code Element -->
 
-    <script>
+    <script type="module">
       let channel = null;
 
       const connection = new RTCPeerConnection({
@@ -99,91 +169,22 @@
 
         channel.send(text);
       }
-    </script>
 
-    <table width="100%" border="1">
-      <tbody>
-        <tr>
-          <th>#</th>
-          <th>initiator</th>
-          <th>peer</th>
-        </tr>
-        <tr>
-          <td>step 1</td>
-          <td>
-            <input
-              type="button"
-              value="create offer"
-              onclick="step_1_initiator_create_offer()"
-            />
-            <input id="createdOffer" type="text" hidden="" />
-          </td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>step 2</td>
-          <td></td>
-          <td>
-            <input
-              id="remoteOffer"
-              type="text"
-              placeholder="offer from initiator"
-            />
-            <input
-              type="button"
-              value="accept offer"
-              onclick="step_2_accept_remote_offer()"
-            />
-          </td>
-        </tr>
-        <tr>
-          <td>step 3</td>
-          <td></td>
-          <td>
-            <input
-              type="button"
-              value="create answer"
-              onclick="step_3_create_answer()"
-            />
-            <input id="createdAnswer" type="text" />
-          </td>
-        </tr>
-        <tr>
-          <td>step 4</td>
-          <td>
-            <input
-              id="remoteAnswer"
-              type="text"
-              placeholder="answer from peer"
-            />
-            <input
-              type="button"
-              value="accept answer"
-              onclick="step_4_accept_answer()"
-            />
-          </td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
-    <hr />
-    <input id="text" type="text" />
-    <input type="button" value="send" onclick="send_text()" />
-    <hr />
-    <table border="1">
-      <tbody>
-        <tr>
-          <th colspan="2">connection</th>
-        </tr>
-        <tr>
-          <th>connectionState</th>
-          <td id="connectionState">connected</td>
-        </tr>
-        <tr>
-          <th>iceConnectionState</th>
-          <td id="iceConnectionState">connected</td>
-        </tr>
-      </tbody>
-    </table>
+      document.querySelector('#create-offer').addEventListener('click', () => {
+        step_1_initiator_create_offer();
+      });
+      document.querySelector('#accept-offer').addEventListener('click', () => {
+        step_2_accept_remote_offer();
+      });
+      document.querySelector('#create-answer').addEventListener('click', () => {
+        step_3_create_answer();
+      });
+      document.querySelector('#accept-answer').addEventListener('click', () => {
+        step_4_accept_answer();
+      });
+      document.querySelector('#send-text').addEventListener('click', () => {
+        send_text();
+      });
+    </script>
   </body>
 </html>
