@@ -5,6 +5,7 @@ import {
 } from 'https://unpkg.com/lit-element/lit-element.js?module';
 
 import fireEvent from './custom-event.js';
+import './p2p-sync.js';
 
 // constants
 const SUCCESS_UI_TIMEOUT = 3000; // milliseconds
@@ -159,6 +160,7 @@ class SyncDialog extends LitElement {
             <button class="close" @click="${close}" title="Abbrechen">
               ${closeIcon}
             </button>
+            <p2p-sync></p2p-sync>
           </article>
         </div>`
       : html``;

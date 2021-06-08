@@ -46,7 +46,7 @@
 //     </table>
 
 //     <script type="module">
-import QrScanner from './qr-scanner.js';
+/*import QrScanner from './qr-scanner.js';
 
 let channel = null;
 
@@ -150,7 +150,29 @@ document.querySelector('#accept-offer').addEventListener('click', () => {
 });
 document.querySelector('#send-text').addEventListener('click', () => {
   send_text();
-});
+});*/
 //     </script>
 //   </body>
 // </html>
+
+import {
+  css,
+  html,
+  LitElement,
+} from 'https://unpkg.com/lit-element/lit-element.js?module';
+
+class P2pSync extends LitElement {
+  static get properties() {
+    return {};
+  }
+
+  static get styles() {
+    return css``;
+  }
+
+  render() {
+    return html` <div>MOCK</div>`;
+  }
+}
+
+customElements.define('p2p-sync', P2pSync);
