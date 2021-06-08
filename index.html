@@ -9,8 +9,7 @@
     <title>P2P Communication</title>
   </head>
   <body>
-    <video id="offer-video" width="300" height="170"></video>
-    <video id="answer-video" width="300" height="170"></video>
+    <video id="qr-video" width="300" height="170"></video>
 
     <div id="qr"></div>
 
@@ -19,58 +18,13 @@
     <div class="receive"></div>
     <div class="send"></div>
 
-    <table width="100%" border="1">
-      <tbody>
-        <tr>
-          <th>#</th>
-          <th>initiator</th>
-          <th>peer</th>
-        </tr>
-        <tr>
-          <td>step 1</td>
-          <td>
-            <input id="createdOffer" type="text" hidden="" />
-          </td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>step 2</td>
-          <td></td>
-          <td>
-            <input
-              id="remoteOffer"
-              type="text"
-              placeholder="offer from initiator"
-            />
-            <!-- <input type="button" value="accept offer" id="accept-offer" /> -->
-          </td>
-        </tr>
-        <tr>
-          <td>step 3</td>
-          <td></td>
-          <td>
-            <input type="button" value="create answer" id="create-answer" />
-            <input id="createdAnswer" type="text" />
-          </td>
-        </tr>
-        <tr>
-          <td>step 4</td>
-          <td>
-            <input
-              id="remoteAnswer"
-              type="text"
-              placeholder="answer from peer"
-            />
-            <input type="button" value="accept answer" id="accept-answer" />
-          </td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
     <hr />
+
     <input id="text" type="text" />
     <input type="button" value="send" id="send-text" />
+
     <hr />
+
     <table border="1">
       <tbody>
         <tr>
@@ -78,11 +32,11 @@
         </tr>
         <tr>
           <th>connectionState</th>
-          <td id="connectionState">connected</td>
+          <td id="connectionState">not connected</td>
         </tr>
         <tr>
           <th>iceConnectionState</th>
-          <td id="iceConnectionState">connected</td>
+          <td id="iceConnectionState">not connected</td>
         </tr>
       </tbody>
     </table>
@@ -99,8 +53,6 @@
       connection.ondatachannel = (event) => {
         console.log('ondatachannel');
         channel = event.channel;
-        // channel.onopen = event => console.log('onopen', event);
-        // channel.onmessage = event => console.log('onmessage', event);
         channel.onmessage = (event) => alert(event.data);
       };
 
@@ -109,19 +61,14 @@
           connection.connectionState); // console.log('onconnectionstatechange', connection.connectionState)
       connection.oniceconnectionstatechange = (event) =>
         (document.getElementById('iceConnectionState').innerText =
-          connection.iceConnectionState); // console.log('oniceconnectionstatechange', connection.iceConnectionState)
+          connection.iceConnectionState);
 
       async function step_1_initiator_create_offer() {
         channel = connection.createDataChannel('data');
-        // channel.onopen = event => console.log('onopen', event)
-        // channel.onmessage = event => console.log('onmessage', event)
         channel.onmessage = (event) => alert(event.data);
         connection.onicecandidate = (event) => {
-          // console.log('onicecandidate', event)
           if (!event.candidate) {
             var createdOffer = JSON.stringify(connection.localDescription);
-            document.getElementById('createdOffer').value = createdOffer;
-            document.getElementById('createdOffer').hidden = false;
             update_qrcode(createdOffer);
           }
         };
@@ -130,11 +77,13 @@
 
         // Wait for response QR Code
         let qrScannerResponse = new QrScanner(
-          document.querySelector('#offer-video'),
+          document.querySelector('#qr-video'),
           async (result) => {
             console.log('Peer approval response:', result);
             qrScannerResponse.stop();
             qrScannerResponse = undefined;
+
+            update_qrcode();
 
             const answer = JSON.parse(result);
             await connection.setRemoteDescription(answer);
@@ -144,13 +93,14 @@
       }
 
       async function step_2_accept_remote_offer() {
-        console.log('haaaa');
         let qrScannerAcceptOffer = new QrScanner(
-          document.querySelector('#answer-video'),
+          document.querySelector('#qr-video'),
           async (result) => {
             console.log('Accepted Remote Offer:', result);
             qrScannerAcceptOffer.stop();
             qrScannerAcceptOffer = undefined;
+
+            update_qrcode();
 
             const offer = JSON.parse(result);
             await connection.setRemoteDescription(offer);
@@ -162,27 +112,16 @@
 
       async function step_3_create_answer() {
         connection.onicecandidate = (event) => {
-          // console.log('onicecandidate', event)
           if (!event.candidate) {
             var createdAnswer = JSON.stringify(connection.localDescription);
 
             update_qrcode(createdAnswer);
-
-            document.getElementById('createdAnswer').value = createdAnswer;
-            document.getElementById('createdAnswer').hidden = false;
           }
         };
 
         const answer = await connection.createAnswer();
         await connection.setLocalDescription(answer);
       }
-
-      //   async function step_4_accept_answer() {
-      //     const answer = JSON.parse(
-      //       document.getElementById('remoteAnswer').value
-      //     );
-      //     await connection.setRemoteDescription(answer);
-      //   }
 
       async function send_text() {
         const text = document.getElementById('text').value;
@@ -195,12 +134,6 @@
       });
       document.querySelector('#accept-offer').addEventListener('click', () => {
         step_2_accept_remote_offer();
-      });
-      document.querySelector('#create-answer').addEventListener('click', () => {
-        // step_3_create_answer();
-      });
-      document.querySelector('#accept-answer').addEventListener('click', () => {
-        // step_4_accept_answer();
       });
       document.querySelector('#send-text').addEventListener('click', () => {
         send_text();
