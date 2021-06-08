@@ -10,17 +10,6 @@
   </head>
   <body>
     <video width="300" height="170"></video>
-    <script type="module">
-      import QrScanner from './qr-scanner.js';
-      const qrScanner = new QrScanner(
-        document.querySelector('video'),
-        (result) => {
-          console.log('decoded qr code:', result);
-          qrScanner.stop();
-        }
-      );
-      //   qrScanner.start();
-    </script>
 
     <table width="100%" border="1">
       <tbody>
@@ -96,6 +85,16 @@
     <!-- / QR Code Element -->
 
     <script type="module">
+      import QrScanner from './qr-scanner.js';
+      const qrScanner = new QrScanner(
+        document.querySelector('video'),
+        (result) => {
+          console.log('decoded qr code:', result);
+          qrScanner.stop();
+        }
+      );
+      //   qrScanner.start();
+
       let channel = null;
 
       const connection = new RTCPeerConnection({
