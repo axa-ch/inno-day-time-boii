@@ -2401,11 +2401,13 @@ var create_qrcode = function (
 };
 
 var update_qrcode = function (qrData) {
-  document.getElementById('qr').innerHTML = create_qrcode(
-    qrData,
-    '0',
-    'L',
-    'Byte',
-    'UTF-8'
-  );
+  if (!qrData) document.getElementById('qr').innerHTML = '';
+  else
+    document.getElementById('qr').innerHTML = create_qrcode(
+      qrData,
+      '0',
+      'L',
+      'Byte',
+      'UTF-8'
+    );
 };
